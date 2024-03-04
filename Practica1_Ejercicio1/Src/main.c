@@ -1,43 +1,29 @@
  /**
   ******************************************************************************
-  * @file    UART/UART_Printf/Src/main.c
-  * @author  MCD Application Team
-  * @brief   This example shows how to retarget the C library printf function
-  *          to the UART.
+  * @file    main.c
+  * @author  Daniel David Albarracin
+  * @github  ddalbarracin
+  * @brief   This program make a led sequence
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+  **/
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/** @addtogroup STM32F4xx_HAL_Examples
-  * @{
-  */
-
-/** @addtogroup UART_Printf
-  * @{
-  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
 
-/* Private function prototypes -----------------------------------------------*/
+/* Defines declarations */
+#define DELAY_OFF 200
+#define DELAY_ON 200
 
+/* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
@@ -65,26 +51,26 @@ int main(void)
   /* Configure the system clock to 180 MHz */
   SystemClock_Config();
 
-  /* Initialize BSP Led for LED2 */
-  BSP_LED_Init(LED1);
-  BSP_LED_Init(LED2);
-  BSP_LED_Init(LED3);
+  /* Initialize BSP Leds */
+  BSP_LED_Init(LED_GREEN);
+  BSP_LED_Init(LED_BLUE);
+  BSP_LED_Init(LED_RED);
+
+  // Local Variables
+  uint8_t led_array_seq1[] = {LED_GREEN, LED_BLUE, LED_RED};
+  uint8_t *led_array = NULL;
+  led_array = led_array_seq1;
 
   /* Infinite loop */
   while (1)
   {
-	  BSP_LED_On(LED1);
-	  HAL_Delay(200);
-	  BSP_LED_Off(LED1);
-	  HAL_Delay(200);
-	  BSP_LED_On(LED2);
-	  HAL_Delay(200);
-	  BSP_LED_Off(LED2);
-	  HAL_Delay(200);
-	  BSP_LED_On(LED3);
-	  HAL_Delay(200);
-	  BSP_LED_Off(LED3);
-	  HAL_Delay(200);
+	  uint8_t index;
+	  for (index = 0; index < sizeof(led_array_seq1); index++){
+		  BSP_LED_On(led_array[index]);
+		  HAL_Delay(DELAY_ON);
+		  BSP_LED_Off(led_array[index]);
+		  HAL_Delay(DELAY_OFF);
+	  }
   }
 }
 
