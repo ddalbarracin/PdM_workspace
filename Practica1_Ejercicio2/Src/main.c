@@ -1,47 +1,31 @@
  /**
   ******************************************************************************
-  * @file    UART/UART_Printf/Src/main.c
-  * @author  MCD Application Team
-  * @brief   This example shows how to retarget the C library printf function
-  *          to the UART.
+  * @file    main.c
+  * @author  Daniel David Albarracin
+  * @github  ddalbarracin
+  * @brief   This program change the led sequence when user press push user
+  * 		 button
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+  **/
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------ */
+
 #include "main.h"
 #include <stdint.h>
-
-/** @addtogroup STM32F4xx_HAL_Examples
-  * @{
-  */
-
-/** @addtogroup UART_Printf
-  * @{
-  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
 
+/* Defines declarations */
 #define DELAY_OFF 200
 #define DELAY_ON 200
 
 /* Private function prototypes -----------------------------------------------*/
-
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
@@ -69,12 +53,13 @@ int main(void)
   /* Configure the system clock to 180 MHz */
   SystemClock_Config();
 
-  /* Initialize BSP Led for LED2 */
+  /* Initialize BSP Leds */
   BSP_LED_Init(LED_GREEN);
   BSP_LED_Init(LED_BLUE);
   BSP_LED_Init(LED_RED);
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 
+  // Local Variables and pointers
   uint8_t led_array_seq1[] = {LED_GREEN, LED_BLUE, LED_RED};
   uint8_t led_array_seq2[] = {LED_GREEN, LED_RED, LED_BLUE};
   uint8_t seq_flg = 0;
@@ -88,8 +73,8 @@ int main(void)
 
 	  if(BSP_PB_GetState(BUTTON_USER)){
 		  if (!seq_flg){
-				  led_array = led_array_seq2;
-				  seq_flg = 1;
+			  led_array = led_array_seq2;
+			  seq_flg = 1;
 		  }
 		  else{
 			  led_array = led_array_seq1;
