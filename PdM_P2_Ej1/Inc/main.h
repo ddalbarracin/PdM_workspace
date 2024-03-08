@@ -28,8 +28,6 @@
 #include "stm32f4xx_hal.h"  		/* <- HAL include */
 #include "stm32f4xx_nucleo_144.h" 	/* <- BSP include */
 
-
-
 /* Exported types ------------------------------------------------------------*/
 typedef uint32_t tick_t;
 typedef bool bool_t;
@@ -40,6 +38,8 @@ typedef struct{
 } delay_t;
 
 /* Exported constants --------------------------------------------------------*/
+#define DELAY 100
+
 /* User can use this section to tailor USARTx/UARTx instance used and associated
    resources */
 /* Definition for USARTx clock resources */
@@ -47,7 +47,6 @@ typedef struct{
 #define USARTx_CLK_ENABLE()              __HAL_RCC_USART3_CLK_ENABLE();
 #define USARTx_RX_GPIO_CLK_ENABLE()      __HAL_RCC_GPIOD_CLK_ENABLE()
 #define USARTx_TX_GPIO_CLK_ENABLE()      __HAL_RCC_GPIOD_CLK_ENABLE()
-
 #define USARTx_FORCE_RESET()             __HAL_RCC_USART3_FORCE_RESET()
 #define USARTx_RELEASE_RESET()           __HAL_RCC_USART3_RELEASE_RESET()
 

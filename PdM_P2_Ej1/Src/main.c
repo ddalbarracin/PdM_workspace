@@ -11,7 +11,6 @@
 /* Includes ------------------------------------------------------------------ */
 
 #include "main.h"
-#include <stdint.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -24,56 +23,6 @@ UART_HandleTypeDef UartHandle;
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
-
-/* Private functions ---------------------------------------------------------*/
-
-/**
-  * @brief  delayInit function initialize a delay
-  * @param  delay_t struct, tick_t
-  * @retval None
-  */
-void delayInit( delay_t *delay, tick_t duration ){
-
-	delay->duration = duration;
-	delay->running = false;
-}
-
-/**
-  * @brief  delayRead function read and check a delay
-  * @param  delay_t struct
-  * @retval bool_t
-  */
-bool_t delayRead( delay_t *delay ){
-
-	tick_t get_tick = 0;
-	bool_t delay_flg = false;
-
-	if (delay->running){
-		get_tick = Hal_GetTick();
-		if ((get_tick - delay->startTime) >= delay->duration){
-			delay->running = false;
-			delay_flg = true;
-		}
-	}
-	else{
-		delay->startTime = Hal_GetTick();
-		delay->running = true;
-	}
-
-	return delay_flg;
-}
-
-/**
-  * @brief  delayWrite function change duration of a delay
-  * @param  delay_t struct, tick_t
-  * @retval None
-  */
-void delayWrite( delay_t *delay, tick_t duration ){
-
-	if(delay->running){
-		delay->duration = duration;
-	}
-}
 
 /**
   * @brief  Main program
@@ -91,15 +40,17 @@ int main(void)
          handled in milliseconds basis.
        - Set NVIC Group Priority to 4
        - Low Level Initialization
-     */
+       */
+	HAL_Init();
+	/* Configure the system clock to 180 MHz */
+	SystemClock_Config();
 
+	/* Infinite loop */
+	while (1)
+	{
 
-  /* Infinite loop */
-  while (1)
-  {
-
-  }
-  return(0)
+	}
+	return(0)
 }
 
 
@@ -205,12 +156,54 @@ void assert_failed(uint8_t *file, uint32_t line)
 }
 #endif
 
-/**
-  * @}
-  */
+/* Private functions ---------------------------------------------------------*/
 
 /**
-  * @}
+  * @brief  delayInit function initialize a delay
+  * @param  delay_t struct, tick_t
+  * @retval None
   */
+void delayInit( delay_t *delay, tick_t duration ){
+
+	delay->duration = duration;
+	delay->running = false;
+}
+
+/**
+  * @brief  delayRead function read and check a delay
+  * @param  delay_t struct
+  * @retval bool_t
+  */
+bool_t delayRead( delay_t *delay ){
+
+	tick_t get_tick = 0;
+	bool_t delay_flg = false;
+
+	if (delay->running){
+		get_tick = Hal_GetTick();
+		if ((get_tick - delay->startTime) >= delay->duration){
+			delay->running = false;
+			delay_flg = true;
+		}
+	}
+	else{
+		delay->startTime = Hal_GetTick();
+		delay->running = true;
+	}
+
+	return delay_flg;
+}
+
+/**
+  * @brief  delayWrite function change duration of a delay
+  * @param  delay_t struct, tick_t
+  * @retval None
+  */
+void delayWrite( delay_t *delay, tick_t duration ){
+
+	if(delay->running){
+		delay->duration = duration;
+	}
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
