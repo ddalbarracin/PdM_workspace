@@ -39,6 +39,7 @@ typedef struct{
 
 /* Exported constants --------------------------------------------------------*/
 #define DELAY 100  // Base Period
+#define DELAY_MAX (DELAY*100)
 #define PERIOD_1000 (DELAY*10)
 #define PERIOD_200 (DELAY*2)
 #define PERIOD_100 (DELAY*1)

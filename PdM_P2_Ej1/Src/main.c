@@ -207,9 +207,10 @@ void assert_failed(uint8_t *file, uint32_t line)
   * @retval None
   */
 void delayInit( delay_t *delay, tick_t duration ){
-
-	delay->duration = duration;
-	delay->running = false;
+	if ((0<=duration)&&(duration<=DELAY_MAX)){
+		delay->duration = duration;
+		delay->running = false;
+	}
 }
 
 /**
@@ -243,8 +244,9 @@ bool_t delayRead( delay_t *delay ){
   * @retval None
   */
 void delayWrite( delay_t *delay, tick_t duration ){
-
-	delay->duration = duration;
+	if ((delay->running)&&(0<=duration)&&(duration<=DELAY_MAX)){
+		delay->duration = duration;
+	}
 
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
