@@ -3,7 +3,9 @@
   * @file    main.c
   * @author  Daniel David Albarracin
   * @github  ddalbarracin
-  * @brief
+  * @brief   PdM - Practical Work - Exercise 3 [Optional].
+  * 		 This exercise blinks leds in intermittent simulating a PWM signal with
+  * 		 different periodes and defined duty cycle.
   *
   ******************************************************************************
   **/
@@ -48,25 +50,48 @@ int main(void)
 
 	/* Local Variables */
 	Led_TypeDef leds[]={LED_GREEN, LED_BLUE, LED_RED};
-	uint8_t size_leds = sizeof(leds)/sizeof(Led_TypeDef);
+	uint8_t size_leds = (uint8_t) (sizeof(leds)/sizeof(Led_TypeDef));
+
 	delay_t tick_led[size_leds];
-	uint8_t indx;
+
+	uint8_t indx_led;
+	uint8_t indx_duty = 0;
+	uint8_t indx_seq = 0;
+
+	tick_t duty_led_array[]={(tick_t)PERIOD_1000*DUTY, (tick_t)PERIOD_200*DUTY, (tick_t)PERIOD_100*DUTY};
+	uint8_t size_duty = (uint8_t)(sizeof(duty_led_array)/sizeof(tick_t));
+	tick_t *duty_led = NULL;
+	duty_led = duty_led_array;
 
 	/* Initialize BSP Leds */
-	for(indx = 0; indx < size_leds; indx ++){
-		BSP_LED_Init(leds[indx]);
-		delayInit(&tick_led[indx], DELAY);
+	for(indx_led = 0; indx_led < size_leds; indx_led ++){
+		BSP_LED_Init(leds[indx_led]);
+		delayInit(&tick_led[indx_led], *duty_led);
 	}
+
 
 	/* Infinite loop */
 	while (1)
 	{
-		for (indx = 0; indx < size_leds; indx ++){
-			if(delayRead(&tick_led[indx])){
-				BSP_LED_Toggle(leds[indx]);
+
+		for (indx_led = 0; indx_led < size_leds; indx_led ++){
+			if(delayRead(&tick_led[indx_led])){
+				BSP_LED_Toggle(leds[indx_led]);
+				indx_seq++;
 			}
 		}
-
+		if (indx_seq==(DUTY_SEQ*size_leds)){
+			indx_seq=0;
+			indx_duty++;
+			duty_led=&duty_led_array[indx_duty];
+			if(indx_duty==size_duty){
+				indx_duty = 0;
+				duty_led = duty_led_array;
+			}
+			for(indx_led = 0; indx_led < size_leds; indx_led ++){
+				delayInit(&tick_led[indx_led], *duty_led);
+			}
+		}
 	}
 	return(0);
 }
@@ -219,9 +244,7 @@ bool_t delayRead( delay_t *delay ){
   */
 void delayWrite( delay_t *delay, tick_t duration ){
 
-	if(delay->running){
-		delay->duration = duration;
-	}
-}
+	delay->duration = duration;
 
+}
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -38,7 +38,13 @@ typedef struct{
 } delay_t;
 
 /* Exported constants --------------------------------------------------------*/
-#define DELAY 100
+#define DELAY 100  // Base Period
+#define PERIOD_1000 (DELAY*10)
+#define PERIOD_200 (DELAY*2)
+#define PERIOD_100 (DELAY*1)
+#define DUTY 0.5 // Duty cycle 50 %
+#define SEQUENCY 5
+#define DUTY_SEQ (SEQUENCY*2)
 
 /* User can use this section to tailor USARTx/UARTx instance used and associated
    resources */
