@@ -42,15 +42,33 @@ int main(void)
        - Low Level Initialization
        */
 	HAL_Init();
+
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
+
+	/* Local Variables */
+	Led_TypeDef leds[]={LED_GREEN, LED_BLUE, LED_RED};
+	uint8_t size_leds = sizeof(leds)/sizeof(Led_TypeDef);
+	delay_t tick_led[size_leds];
+	uint8_t indx;
+
+	/* Initialize BSP Leds */
+	for(indx = 0; indx < size_leds; indx ++){
+		BSP_LED_Init(leds[indx]);
+		delayInit(&tick_led[indx], DELAY);
+	}
 
 	/* Infinite loop */
 	while (1)
 	{
+		for (indx = 0; indx < size_leds; indx ++){
+			if(delayRead(&tick_led[indx])){
+				BSP_LED_Toggle(leds[indx]);
+			}
+		}
 
 	}
-	return(0)
+	return(0);
 }
 
 
@@ -180,14 +198,14 @@ bool_t delayRead( delay_t *delay ){
 	bool_t delay_flg = false;
 
 	if (delay->running){
-		get_tick = Hal_GetTick();
+		get_tick = HAL_GetTick();
 		if ((get_tick - delay->startTime) >= delay->duration){
 			delay->running = false;
 			delay_flg = true;
 		}
 	}
 	else{
-		delay->startTime = Hal_GetTick();
+		delay->startTime = HAL_GetTick();
 		delay->running = true;
 	}
 
