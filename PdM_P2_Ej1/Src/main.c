@@ -5,7 +5,7 @@
   * @github  ddalbarracin
   * @brief   PdM - Practical Work - Exercise 3 [Optional].
   * 		 This exercise blinks leds in intermittent simulating a PWM signal with
-  * 		 different periodes and defined duty cycle.
+  * 		 different periods and defined duty cycle.
   *
   ******************************************************************************
   **/
