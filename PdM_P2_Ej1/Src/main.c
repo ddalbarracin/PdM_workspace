@@ -207,9 +207,11 @@ void assert_failed(uint8_t *file, uint32_t line)
   * @retval None
   */
 void delayInit( delay_t *delay, tick_t duration ){
-	if ((0<=duration)&&(duration<=DELAY_MAX)){
-		delay->duration = duration;
-		delay->running = false;
+	if (delay != NULL){
+		if ((0<=duration)&&(duration<=DELAY_MAX)){
+			delay->duration = duration;
+			delay->running = false;
+		}
 	}
 }
 
@@ -222,19 +224,19 @@ bool_t delayRead( delay_t *delay ){
 
 	tick_t get_tick = 0;
 	bool_t delay_flg = false;
-
-	if (delay->running){
-		get_tick = HAL_GetTick();
-		if ((get_tick - delay->startTime) >= delay->duration){
-			delay->running = false;
-			delay_flg = true;
+	if (delay != NULL){
+		if (delay->running){
+			get_tick = HAL_GetTick();
+			if ((get_tick - delay->startTime) >= delay->duration){
+				delay->running = false;
+				delay_flg = true;
+			}
+		}
+		else{
+			delay->startTime = HAL_GetTick();
+			delay->running = true;
 		}
 	}
-	else{
-		delay->startTime = HAL_GetTick();
-		delay->running = true;
-	}
-
 	return delay_flg;
 }
 
@@ -244,9 +246,10 @@ bool_t delayRead( delay_t *delay ){
   * @retval None
   */
 void delayWrite( delay_t *delay, tick_t duration ){
-	if ((delay->running)&&(0<=duration)&&(duration<=DELAY_MAX)){
-		delay->duration = duration;
+	if(delay != NULL){
+		if ((!delay->running)&&(0<=duration)&&(duration<=DELAY_MAX)){
+			delay->duration = duration;
+		}
 	}
-
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
