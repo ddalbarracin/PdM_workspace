@@ -7,9 +7,9 @@
   * @param  delay_t struct, tick_t
   * @retval None
   */
-void delayInit( delay_t *delay, tick_t duration ){
-	if (delay != NULL){
-		if ((0<=duration)&&(duration<=DELAY_MAX)){
+void delayInit(delay_t *delay, tick_t duration) {
+	if (delay != NULL) {
+		if ((0 < duration) && (duration <= DELAY_MAX)) {
 			delay->duration = duration;
 			delay->running = false;
 		}
@@ -21,24 +21,24 @@ void delayInit( delay_t *delay, tick_t duration ){
   * @param  delay_t struct
   * @retval bool_t
   */
-bool_t delayRead( delay_t *delay ){
+bool_t delayRead(delay_t *delay) {
 
+	bool_t stts = false;
 	tick_t get_tick = 0;
-	bool_t delay_flg = false;
-	if (delay != NULL){
-		if (delay->running){
-			get_tick = HAL_GetTick();
-			if ((get_tick - delay->startTime) >= delay->duration){
+
+	if (delay != NULL) {
+		get_tick = HAL_GetTick();
+		if (delay->running) {
+			if ((get_tick - delay->startTime) >= delay->duration) {
 				delay->running = false;
-				delay_flg = true;
+				stts = true;
 			}
-		}
-		else{
-			delay->startTime = HAL_GetTick();
+		} else {
+			delay->startTime = get_tick;
 			delay->running = true;
 		}
 	}
-	return delay_flg;
+	return stts;
 }
 
 /**
@@ -46,9 +46,9 @@ bool_t delayRead( delay_t *delay ){
   * @param  delay_t struct, tick_t
   * @retval None
   */
-void delayWrite( delay_t *delay, tick_t duration ){
-	if(delay != NULL){
-		if ((!delay->running)&&(0<=duration)&&(duration<=DELAY_MAX)){
+void delayWrite(delay_t *delay, tick_t duration) {
+	if (delay != NULL) {
+		if ((!delay->running) && (0 < duration) && (duration <= DELAY_MAX)) {
 			delay->duration = duration;
 		}
 	}

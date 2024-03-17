@@ -3,7 +3,7 @@
   * @file    main.c
   * @author  Daniel David Albarracin
   * @github  ddalbarracin
-  * @brief   PdM - Practical Work - Exercise 3 [Optional].
+  * @brief   PdM - Practical Work 3 - Exercise 2
   * 		 This exercise blinks leds in intermittent simulating a PWM signal with
   * 		 different periods and defined duty cycle.
   *
@@ -11,7 +11,6 @@
   **/
 
 /* Includes ------------------------------------------------------------------ */
-
 #include "main.h"
 #include "API_Delay.h"
 
@@ -32,26 +31,25 @@ static void Error_Handler(void);
   * @param  None
   * @retval None
   */
-int main(void)
-{
-  /* STM32F4xx HAL library initialization:
-       - Configure the Flash prefetch
-       - Systick timer is configured by default as source of time base, but user 
-         can eventually implement his proper time base source (a general purpose 
-         timer for example or other time source), keeping in mind that Time base 
-         duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and 
-         handled in milliseconds basis.
-       - Set NVIC Group Priority to 4
-       - Low Level Initialization
-       */
+int main(void) {
+	/* STM32F4xx HAL library initialization:
+	 - Configure the Flash prefetch
+	 - Systick timer is configured by default as source of time base, but user
+	 can eventually implement his proper time base source (a general purpose
+	 timer for example or other time source), keeping in mind that Time base
+	 duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and
+	 handled in milliseconds basis.
+	 - Set NVIC Group Priority to 4
+	 - Low Level Initialization
+	 */
 	HAL_Init();
 
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
 
 	/* Local Variables */
-	Led_TypeDef leds[]={LED_GREEN, LED_BLUE, LED_RED};
-	uint8_t size_leds = (uint8_t) (sizeof(leds)/sizeof(Led_TypeDef));
+	Led_TypeDef leds[] = { LED_GREEN, LED_BLUE, LED_RED };
+	uint8_t size_leds = (uint8_t) (sizeof(leds) / sizeof(Led_TypeDef));
 
 	delay_t tick_led[size_leds];
 
@@ -59,42 +57,41 @@ int main(void)
 	uint8_t indx_duty = 0;
 	uint8_t indx_seq = 0;
 
-	tick_t duty_led_array[]={(tick_t)PERIOD_400*DUTY, (tick_t)PERIOD_400*DUTY, (tick_t)PERIOD_400*DUTY};
-	uint8_t size_duty = (uint8_t)(sizeof(duty_led_array)/sizeof(tick_t));
+	tick_t duty_led_array[] = { (tick_t) PERIOD_400 * DUTY, (tick_t) PERIOD_400
+			* DUTY, (tick_t) PERIOD_400 * DUTY };
+	uint8_t size_duty = (uint8_t) (sizeof(duty_led_array) / sizeof(tick_t));
 	tick_t *duty_led = NULL;
 	duty_led = duty_led_array;
 
 	/* Initialize BSP Leds */
-	for(indx_led = 0; indx_led < size_leds; indx_led ++){
+	for (indx_led = 0; indx_led < size_leds; indx_led++) {
 		BSP_LED_Init(leds[indx_led]);
 		delayInit(&tick_led[indx_led], *duty_led);
 	}
 
-
 	/* Infinite loop */
-	while (1)
-	{
+	while (1) {
 
-		for (indx_led = 0; indx_led < size_leds; indx_led ++){
-			if(delayRead(&tick_led[indx_led])){
+		for (indx_led = 0; indx_led < size_leds; indx_led++) {
+			if (delayRead(&tick_led[indx_led])) {
 				BSP_LED_Toggle(leds[indx_led]);
 				indx_seq++;
 			}
 		}
-		if (indx_seq==(DUTY_SEQ*size_leds)){
-			indx_seq=0;
+		if (indx_seq == (DUTY_SEQ * size_leds)) {
+			indx_seq = 0;
 			indx_duty++;
-			duty_led=&duty_led_array[indx_duty];
-			if(indx_duty==size_duty){
+			duty_led = &duty_led_array[indx_duty];
+			if (indx_duty == size_duty) {
 				indx_duty = 0;
 				duty_led = duty_led_array;
 			}
-			for(indx_led = 0; indx_led < size_leds; indx_led ++){
+			for (indx_led = 0; indx_led < size_leds; indx_led++) {
 				delayInit(&tick_led[indx_led], *duty_led);
 			}
 		}
 	}
-	return(0);
+	return (0);
 }
 
 
