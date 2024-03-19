@@ -15,9 +15,23 @@
 #include "API_Delay.h"
 
 /* Private typedef -----------------------------------------------------------*/
+/* Button State enum */
+typedef enum{
+	BUTTON_UP,
+	BUTTON_FALLING,
+	BUTTON_DOWN,
+	BUTTON_RISING,
+} debounceState_t;
+
 /* Private define ------------------------------------------------------------*/
+#define UPTOFALL 40
+#define RISETODOWN 40
 /* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
+/* Private variables -------------;--------------------------------------------*/
+debounceState_t ActualState;
+delay_t button_delay;
+Led_TypeDef led[] = { LED_GREEN, LED_BLUE, LED_RED };
+Button_TypeDef button = BUTTON_USER;
 
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
@@ -25,6 +39,11 @@ UART_HandleTypeDef UartHandle;
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
+void debounceFSM_init(void);
+void debounceFSM_update(void);
+void buttonPressed(void);
+void buttonReleased(void);
+
 
 /**
   * @brief  Main program
@@ -48,48 +67,23 @@ int main(void) {
 	SystemClock_Config();
 
 	/* Local Variables */
-	Led_TypeDef leds[] = { LED_GREEN, LED_BLUE, LED_RED };
-	uint8_t size_leds = (uint8_t) (sizeof(leds) / sizeof(Led_TypeDef));
-
-	delay_t tick_led[size_leds];
-
-	uint8_t indx_led;
-	uint8_t indx_duty = 0;
-	uint8_t indx_seq = 0;
-
-	tick_t duty_led_array[] = { (tick_t) PERIOD_400 * DUTY, (tick_t) PERIOD_400
-			* DUTY, (tick_t) PERIOD_400 * DUTY };
-	uint8_t size_duty = (uint8_t) (sizeof(duty_led_array) / sizeof(tick_t));
-	tick_t *duty_led = NULL;
-	duty_led = duty_led_array;
-
+	uint8_t led_indx;
+	uint8_t led_size;
+	led_size = sizeof(led) / sizeof(Led_TypeDef);
+	/* Initialize BSP PB for BUTTON_USER */
+	BSP_PB_Init(button, BUTTON_MODE_GPIO);
 	/* Initialize BSP Leds */
-	for (indx_led = 0; indx_led < size_leds; indx_led++) {
-		BSP_LED_Init(leds[indx_led]);
-		delayInit(&tick_led[indx_led], *duty_led);
+	for (led_indx = 0; led_indx < led_size; led_indx++) {
+		BSP_LED_Init(led[led_indx]);
 	}
+
+	/* Initialize FSM */
+	debounceFSM_init();
 
 	/* Infinite loop */
 	while (1) {
 
-		for (indx_led = 0; indx_led < size_leds; indx_led++) {
-			if (delayRead(&tick_led[indx_led])) {
-				BSP_LED_Toggle(leds[indx_led]);
-				indx_seq++;
-			}
-		}
-		if (indx_seq == (DUTY_SEQ * size_leds)) {
-			indx_seq = 0;
-			indx_duty++;
-			duty_led = &duty_led_array[indx_duty];
-			if (indx_duty == size_duty) {
-				indx_duty = 0;
-				duty_led = duty_led_array;
-			}
-			for (indx_led = 0; indx_led < size_leds; indx_led++) {
-				delayInit(&tick_led[indx_led], *duty_led);
-			}
-		}
+		debounceFSM_update();
 	}
 	return (0);
 }
@@ -198,6 +192,90 @@ void assert_failed(uint8_t *file, uint32_t line)
 #endif
 
 /* Private functions ---------------------------------------------------------*/
+/*
+ * @func   debounceFSM_init
+ * @brief  Initialize FSM
+ * @param  None
+ * @retval None
+ */
+void debounceFSM_init(void) {
+	ActualState = BUTTON_UP;
+	return;
+}
+/*
+ * @func   debounceFSM_update
+ * @brief  Initialize FSM
+ * @param  None
+ * @retval None
+ */
+void debounceFSM_update(void) {
 
+	switch (ActualState) {
+	case BUTTON_UP:
+		if (BSP_PB_GetState(button)) {
+			delayInit(&button_delay, UPTOFALL);
+			ActualState = BUTTON_FALLING;
+		}
+		break;
+	case BUTTON_FALLING:
+		if (delayRead(&button_delay)) {
+			if (BSP_PB_GetState(button)) {
+				buttonPressed();
+				ActualState = BUTTON_DOWN;
+			} else {
+				ActualState = BUTTON_UP;
+			}
+		}
+		break;
+	case BUTTON_DOWN:
+		if (!BSP_PB_GetState(button)) {
+			delayInit(&button_delay, RISETODOWN);
+			ActualState = BUTTON_RISING;
+		}
+		break;
+	case BUTTON_RISING:
+		if (delayRead(&button_delay)) {
+			if (!BSP_PB_GetState(button)) {
+				ActualState = BUTTON_UP;
+				buttonReleased();
+			} else {
+				ActualState = BUTTON_DOWN;
+			}
+		}
+		break;
+	default:
+		debounceFSM_init();
+		break;
+	}
+	return;
+}
+/*
+ * @func   buttonPressed
+ * @brief  Press Button event
+ * @param  button_t
+ * @retval None
+ */
+void buttonPressed(void) {
+	uint8_t led_indx, led_size;
+	led_size = sizeof(led) / sizeof(Led_TypeDef);
+	for (led_indx = 0; led_indx < led_size; led_indx++) {
+			BSP_LED_On(led[led_indx]);
+		}
+	return;
+}
+/*
+ * @func   buttonReleased
+ * @brief  Release Button event
+ * @param  button_t
+ * @retval None
+ */
+void buttonReleased(void) {
+	uint8_t led_indx, led_size;
+	led_size = sizeof(led) / sizeof(Led_TypeDef);
+	for (led_indx = 0; led_indx < led_size; led_indx++) {
+		BSP_LED_Off(led[led_indx]);
+	}
+	return;
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
