@@ -51,21 +51,18 @@ int main(void) {
 	Led_TypeDef leds[] = { LED_GREEN, LED_BLUE, LED_RED };
 	uint8_t size_leds = (uint8_t) (sizeof(leds) / sizeof(Led_TypeDef));
 	delay_t tick_led[size_leds];
+	uint8_t indx_led = 0;
+	tick_t duty_led[SEQUENCY] = { PERIOD_100, PERIOD_200, PERIOD_300, PERIOD_400, PERIOD_500, PERIOD_0 };
+	/* Initialize led frecuency vector */
 
-	uint8_t indx_led;
-	// uint8_t indx_duty = 0;
-	// uint8_t indx_seq = 0;
+	tick_t *ptrduty = duty_led;
 
-	tick_t duty_led_array[] = { (tick_t) PERIOD_400 * DUTY, (tick_t) PERIOD_400
-			* DUTY, (tick_t) PERIOD_400 * DUTY };
-	// uint8_t size_duty = (uint8_t) (sizeof(duty_led_array) / sizeof(tick_t));
-	tick_t *duty_led = NULL;
-	duty_led = duty_led_array;
-
+	/* Initialize BUTTON Leds */
+	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
 	/* Initialize BSP Leds */
 	for (indx_led = 0; indx_led < size_leds; indx_led++) {
 		BSP_LED_Init(leds[indx_led]);
-		delayInit(&tick_led[indx_led], *duty_led);
+		delayInit(&tick_led[indx_led], *ptrduty);
 	}
 	/* Initilize FSM */
 	debounceFSM_init();
@@ -73,6 +70,23 @@ int main(void) {
 	/* Infinite loop */
 	while (1) {
 
+		for (indx_led = 0; indx_led < size_leds; indx_led++) {
+			if (delayRead(&tick_led[indx_led])) {
+				BSP_LED_Toggle(leds[indx_led]);
+			}
+		}
+
+		debounceFSM_update();
+
+		if (readKey()) {
+			ptrduty++;
+			if ((*ptrduty) == 0) {
+				ptrduty = duty_led;
+			}
+			for (indx_led = 0; indx_led < size_leds; indx_led++) {
+				delayInit(&tick_led[indx_led], *ptrduty);
+			}
+		}
 	}
 	return (0);
 }

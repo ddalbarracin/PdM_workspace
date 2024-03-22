@@ -26,13 +26,14 @@ typedef struct{
 /* Exported constants --------------------------------------------------------*/
 #define DELAY 100  // Base Period
 #define DELAY_MAX (DELAY*100)
-#define PERIOD_1000 (DELAY*10)
+#define PERIOD_500 (DELAY*5)
+#define PERIOD_400 (DELAY*4)
+#define PERIOD_300 (DELAY*3)
 #define PERIOD_200 (DELAY*2)
 #define PERIOD_100 (DELAY*1)
-#define PERIOD_400 (DELAY*4)
-#define DUTY 0.5 // Duty cycle 50 %
-#define SEQUENCY 5
-#define DUTY_SEQ (SEQUENCY*2)
+#define PERIOD_0   (DELAY*0)
+#define SEQUENCY 6
+
 /* Exported functions ------------------------------------------------------- */
 void delayInit( delay_t *delay, tick_t duration );
 bool_t delayRead( delay_t *delay );

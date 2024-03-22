@@ -26,26 +26,12 @@ typedef enum{
 
 /* Private variables ---------------------------------------------------------*/
 static debounceState_t ActualState;
-delay_t button_delay;
-Led_TypeDef led[] = { LED_GREEN, LED_BLUE, LED_RED };
-Button_TypeDef button = BUTTON_USER;
+static delay_t button_delay;
+static Led_TypeDef led[] = { LED_GREEN, LED_BLUE, LED_RED };
+static Button_TypeDef button = BUTTON_USER;
 bool_t frec_flg;
 
 /* Private Functions */
-/*
- * @func   buttonReleased
- * @brief  Release Button event
- * @param  button_t
- * @retval None
- */
-static void buttonReleased(void) {
-	uint8_t led_indx, led_size;
-	led_size = sizeof(led) / sizeof(Led_TypeDef);
-	for (led_indx = 0; led_indx < led_size; led_indx++) {
-		BSP_LED_Off(led[led_indx]);
-	}
-	return;
-}
 /*
  * @func   buttonPressed
  * @brief  Press Button event
@@ -53,11 +39,12 @@ static void buttonReleased(void) {
  * @retval None
  */
 static void buttonPressed(void) {
-	uint8_t led_indx, led_size;
+	/*uint8_t led_indx, led_size;
 	led_size = sizeof(led) / sizeof(Led_TypeDef);
 	for (led_indx = 0; led_indx < led_size; led_indx++) {
 			BSP_LED_On(led[led_indx]);
-		}
+		}*/
+	frec_flg = true;
 	return;
 }
 
@@ -100,13 +87,13 @@ void debounceFSM_update(void) {
 		if (!BSP_PB_GetState(button)) {
 			delayInit(&button_delay, RISETODOWN);
 			ActualState = BUTTON_RISING;
+
 		}
 		break;
 	case BUTTON_RISING:
 		if (delayRead(&button_delay)) {
 			if (!BSP_PB_GetState(button)) {
 				ActualState = BUTTON_UP;
-				buttonReleased();
 			} else {
 				ActualState = BUTTON_DOWN;
 			}
@@ -121,8 +108,14 @@ void debounceFSM_update(void) {
 
 
 bool_t readKey(void) {
-	bool_t status = false;
 
-	return (status);
+	bool_t stts = false;
+
+	if (frec_flg) {
+		stts = frec_flg;
+		frec_flg = false;
+	}
+
+	return (stts);
 }
 
