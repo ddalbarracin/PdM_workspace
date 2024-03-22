@@ -7,7 +7,7 @@
 ## Autor 
     Ing. Daniel David Albarracin
 ## Date
-	21/03/2024
+	22/03/2024
 
 # STM32CubeIDE Workshop
 ![](/PdM_P4_Ej2/Docs/Images/ST14179_STM32CubeIDE.png)

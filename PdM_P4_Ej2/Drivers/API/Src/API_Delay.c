@@ -1,7 +1,15 @@
-
-
-/* Private functions ---------------------------------------------------------*/
+/**
+ ******************************************************************************
+ * @file    API/Inc/API_Delay.c.
+ * @author  Daniel David Albarracin
+ * @github  ddalbarracin
+ * @brief   PdM - Practical Work 4 - Exercise 2
+ * 		 	This file implements non blocking delay hanging timer tick
+ ******************************************************************************
+ **/
+/* Private functions --------------------------------------------------------- */
 #include "API_Delay.h"
+
 /**
  * @brief  delayInit function initialize a delay
  * @param  delay_t struct, tick_t
@@ -17,7 +25,8 @@ void delayInit(delay_t *delay, tick_t duration) {
 }
 
 /**
- * @brief  delayRead function read and check a delay
+ * @func   delayRead
+ * @brief  read and check timer tick delay
  * @param  delay_t struct
  * @retval bool_t
  */
@@ -42,7 +51,8 @@ bool_t delayRead(delay_t *delay) {
 }
 
 /**
- * @brief  delayWrite function change duration of a delay
+ * @func   delayWrite
+ * @brief  change duration timer tick delay
  * @param  delay_t struct, tick_t
  * @retval None
  */

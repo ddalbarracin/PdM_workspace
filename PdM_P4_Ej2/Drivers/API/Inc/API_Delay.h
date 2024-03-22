@@ -1,27 +1,27 @@
 /**
-  ******************************************************************************
-  * @file    API/Inc/API_Delay.h
-  * @author  Daniel David Albarracin
-  * @brief   Header for API_Delay.c module
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    API/Inc/API_Delay.h
+ * @author  Daniel David Albarracin
+ * @brief   Header for API_Delay.c module
+ ******************************************************************************
+ */
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
-#include "stm32f4xx_hal.h"  		/* <- HAL include */
-#include "stm32f4xx_nucleo_144.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_nucleo_144.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef uint32_t tick_t;
 typedef bool bool_t;
 
-typedef struct{
-   tick_t startTime;
-   tick_t duration;
-   bool_t running;
-}delay_t;
+typedef struct {
+	tick_t startTime;
+	tick_t duration;
+	bool_t running;
+} delay_t;
 
 /* Exported constants --------------------------------------------------------*/
 #define DELAY 100  // Base Period
@@ -35,6 +35,6 @@ typedef struct{
 #define SEQUENCY 6
 
 /* Exported functions ------------------------------------------------------- */
-void delayInit( delay_t *delay, tick_t duration );
-bool_t delayRead( delay_t *delay );
-void delayWrite( delay_t *delay, tick_t duration );
+void delayInit(delay_t *delay, tick_t duration);
+bool_t delayRead(delay_t *delay);
+void delayWrite(delay_t *delay, tick_t duration);

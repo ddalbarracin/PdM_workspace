@@ -20,9 +20,8 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
-
 /* User can use this section to tailor USARTx/UARTx instance used and associated
-   resources */
+ resources */
 /* Definition for USARTx clock resources */
 #define USARTx                           USART3
 #define USARTx_CLK_ENABLE()              __HAL_RCC_USART3_CLK_ENABLE();

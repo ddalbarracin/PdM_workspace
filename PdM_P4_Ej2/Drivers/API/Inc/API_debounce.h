@@ -1,6 +1,6 @@
 /**
  ******************************************************************************
- * @file    API_debounce.h
+ * @file    API/Inc/API_debounce.h
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
  * @brief   PdM - Practical Work 4 - Exercise 2
@@ -15,7 +15,7 @@
 #define UPTOFALL 40
 #define RISETODOWN 40
 
-/* Private Functions ----------------------------------------------------------*/
+/* Public Functions ----------------------------------------------------------*/
 bool_t readKey(void);
 void debounceFSM_init(void);
 void debounceFSM_update(void);

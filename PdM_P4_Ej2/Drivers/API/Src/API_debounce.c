@@ -8,20 +8,16 @@
  *
  ******************************************************************************
  **/
+
 /* Includes ------------------------------------------------------------------ */
 #include "API_debounce.h"
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_nucleo_144.h"
 
-
-
 /* Private typedef -----------------------------------------------------------*/
 /* Button State enum */
-typedef enum{
-	BUTTON_UP,
-	BUTTON_FALLING,
-	BUTTON_DOWN,
-	BUTTON_RISING,
+typedef enum {
+	BUTTON_UP, BUTTON_FALLING, BUTTON_DOWN, BUTTON_RISING,
 } debounceState_t;
 
 /* Private variables ---------------------------------------------------------*/
@@ -39,11 +35,6 @@ bool_t frec_flg;
  * @retval None
  */
 static void buttonPressed(void) {
-	/*uint8_t led_indx, led_size;
-	led_size = sizeof(led) / sizeof(Led_TypeDef);
-	for (led_indx = 0; led_indx < led_size; led_indx++) {
-			BSP_LED_On(led[led_indx]);
-		}*/
 	frec_flg = true;
 	return;
 }
@@ -87,7 +78,6 @@ void debounceFSM_update(void) {
 		if (!BSP_PB_GetState(button)) {
 			delayInit(&button_delay, RISETODOWN);
 			ActualState = BUTTON_RISING;
-
 		}
 		break;
 	case BUTTON_RISING:
@@ -105,8 +95,12 @@ void debounceFSM_update(void) {
 	}
 	return;
 }
-
-
+/*
+ * @func   readKey
+ * @brief  signal API modules
+ * @param  None
+ * @retval bool_t
+ */
 bool_t readKey(void) {
 
 	bool_t stts = false;
