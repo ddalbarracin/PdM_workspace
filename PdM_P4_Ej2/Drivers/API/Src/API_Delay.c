@@ -1,12 +1,12 @@
 
 
 /* Private functions ---------------------------------------------------------*/
-#include <API_Delay.h>
+#include "API_Delay.h"
 /**
-  * @brief  delayInit function initialize a delay
-  * @param  delay_t struct, tick_t
-  * @retval None
-  */
+ * @brief  delayInit function initialize a delay
+ * @param  delay_t struct, tick_t
+ * @retval None
+ */
 void delayInit(delay_t *delay, tick_t duration) {
 	if (delay != NULL) {
 		if ((0 < duration) && (duration <= DELAY_MAX)) {
@@ -17,10 +17,10 @@ void delayInit(delay_t *delay, tick_t duration) {
 }
 
 /**
-  * @brief  delayRead function read and check a delay
-  * @param  delay_t struct
-  * @retval bool_t
-  */
+ * @brief  delayRead function read and check a delay
+ * @param  delay_t struct
+ * @retval bool_t
+ */
 bool_t delayRead(delay_t *delay) {
 
 	bool_t stts = false;
@@ -42,10 +42,10 @@ bool_t delayRead(delay_t *delay) {
 }
 
 /**
-  * @brief  delayWrite function change duration of a delay
-  * @param  delay_t struct, tick_t
-  * @retval None
-  */
+ * @brief  delayWrite function change duration of a delay
+ * @param  delay_t struct, tick_t
+ * @retval None
+ */
 void delayWrite(delay_t *delay, tick_t duration) {
 	if (delay != NULL) {
 		if ((!delay->running) && (0 < duration) && (duration <= DELAY_MAX)) {

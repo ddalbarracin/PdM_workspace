@@ -9,17 +9,19 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
 #include "stm32f4xx_hal.h"  		/* <- HAL include */
+#include "stm32f4xx_nucleo_144.h"
 #include <stdint.h>
 #include <stdbool.h>
 
 /* Exported types ------------------------------------------------------------*/
 typedef uint32_t tick_t;
 typedef bool bool_t;
+
 typedef struct{
    tick_t startTime;
    tick_t duration;
    bool_t running;
-} delay_t;
+}delay_t;
 
 /* Exported constants --------------------------------------------------------*/
 #define DELAY 100  // Base Period
