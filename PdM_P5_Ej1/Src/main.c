@@ -4,8 +4,8 @@
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
  * @brief   PdM - Practical Work 5 - Exercise 1
- * 		 This exercise implements UART API and its use
- * @date    28032024
+ * 		    This exercise implements UART API and its use
+ * @date    29032024
  ******************************************************************************
  **/
 
@@ -51,18 +51,19 @@ int main(void) {
 	bool_t uart_stts = false;
 
 	/* Initialize UART Hardware */
-	if (uartInit()){
+	if (uartInit()) {
 
 		uart_stts = true;
 
-	}else{
+	} else {
 		Error_Handler();
 	}
 
 	/* Infinite loop */
 	while (1) {
-		if (uart_stts){
-			uartSendStringSize((uint8_t*) USART_MSG_PROMT, strlen((const char *)USART_MSG_PROMT));
+		if (uart_stts) {
+			uartSendStringSize((uint8_t*) USART_MSG_PROMT,
+					strlen((const char*) USART_MSG_PROMT));
 			HAL_Delay(5000);
 		}
 	}

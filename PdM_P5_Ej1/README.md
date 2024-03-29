@@ -7,14 +7,13 @@
 ## Autor 
     Ing. Daniel David Albarracin
 ## Date
-	22/03/2024
+	29/03/2024
 
-# STM32CubeIDE Workshop
+# STM32CubeIDE Environment
 ![](/PdM_P4_Ej2/Docs/Images/ST14179_STM32CubeIDE.png)
 
 # Práctica 5
 ## Objetivo:
-- Objetivo:
 - Implementar un módulo de software sencillo para trabajar con la UART.   
 ## Punto 1
  - Implementar un módulo de software en un archivos fuente API_uart.c

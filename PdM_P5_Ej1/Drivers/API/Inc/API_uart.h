@@ -52,20 +52,20 @@
 #define USART_MSG_MODE 					"\tMode: "
 #define USART_MSG_WORDLENGTH			"\tWordLength: "
 #define USART_MSG_STOPBIT 				"\tStopBits: "
-#define USART_MSG_PARITY				"\tPartity: "
+#define USART_MSG_PARITY				"\tParity: "
 #define USART_MSG_WORD					8
 #define USART_MSG_STOPBITS				1
 #define USART_MSG_PARITY_NONE			"None"
 #define USART_MSG_MODE_TXRX				"TxRx"
 
+/* Generic Defines  ----------------------------------------------------------*/
+#define MEM_CLR							'\0'
 
 /* Public Functions ----------------------------------------------------------*/
-
 bool_t uartInit();
 void uartSendString(uint8_t*);
 void uartSendStringSize(uint8_t*, uint16_t);
 void uartReceiveStringSize(uint8_t*, uint16_t);
-
 
 #endif
 
