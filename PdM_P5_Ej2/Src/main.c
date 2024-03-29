@@ -21,9 +21,6 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-/* UART handler declaration */
-UART_HandleTypeDef UartHandle;
-
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
@@ -49,7 +46,15 @@ int main(void) {
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
 
+	/* Local Variables */
+	Led_TypeDef leds[] = { LED_GREEN, LED_BLUE, LED_RED };
+	uint8_t size_leds = (uint8_t) (sizeof(leds) / sizeof(Led_TypeDef));
+	delay_t tick_led[size_leds];
+	uint8_t indx_led = 0;
+	tick_t duty_led[SEQUENCY] = { PERIOD_100, PERIOD_200, PERIOD_300,
+	PERIOD_400, PERIOD_500, PERIOD_0 };
 	bool_t uart_stts = false;
+	tick_t *ptrduty = duty_led;
 
 	/* Initialize UART Hardware */
 	if (uartInit()) {
@@ -60,12 +65,37 @@ int main(void) {
 		Error_Handler();
 	}
 
+	/* Initialize BUTTON Leds */
+	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
+	/* Initialize BSP Leds */
+	for (indx_led = 0; indx_led < size_leds; indx_led++) {
+		BSP_LED_Init(leds[indx_led]);
+		delayInit(&tick_led[indx_led], *ptrduty);
+	}
+	/* Initilize FSM */
+	debounceFSM_init();
 	/* Infinite loop */
 	while (1) {
+		for (indx_led = 0; indx_led < size_leds; indx_led++) {
+			if (delayRead(&tick_led[indx_led])) {
+				BSP_LED_Toggle(leds[indx_led]);
+			}
+		}
+
+		debounceFSM_update();
+
+		if (readKey()) {
+			ptrduty++;
+			if ((*ptrduty) == 0) {
+				ptrduty = duty_led;
+			}
+			for (indx_led = 0; indx_led < size_leds; indx_led++) {
+				delayInit(&tick_led[indx_led], *ptrduty);
+			}
+		}
 		if (uart_stts) {
 			uartSendStringSize((uint8_t*) USART_MSG_PROMT,
 					strlen((const char*) USART_MSG_PROMT));
-			HAL_Delay(5000);
 		}
 	}
 
