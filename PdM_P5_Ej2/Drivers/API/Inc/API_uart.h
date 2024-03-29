@@ -55,6 +55,8 @@
 #define USART_MSG_STOPBITS				1
 #define USART_MSG_PARITY_NONE			"None"
 #define USART_MSG_MODE_TXRX				"TxRx"
+#define USART_MSG_FALL					"Falling Edge\n\r"
+#define USART_MSG_RISE					"Rising Edge\n\r"
 
 /* Generic Defines  ----------------------------------------------------------*/
 #define MEM_CLR							'\0'

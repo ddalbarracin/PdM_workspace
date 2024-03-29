@@ -84,7 +84,7 @@ int main(void) {
 
 		debounceFSM_update();
 
-		if (readKey()) {
+		if (readKey(BUTTON_FALLING)) {
 			ptrduty++;
 			if ((*ptrduty) == 0) {
 				ptrduty = duty_led;
@@ -92,11 +92,18 @@ int main(void) {
 			for (indx_led = 0; indx_led < size_leds; indx_led++) {
 				delayInit(&tick_led[indx_led], *ptrduty);
 			}
+			if (uart_stts) {
+				uartSendStringSize((uint8_t*) USART_MSG_FALL,
+						strlen((const char*) USART_MSG_FALL));
+			}
 		}
-		if (uart_stts) {
-			uartSendStringSize((uint8_t*) USART_MSG_PROMT,
-					strlen((const char*) USART_MSG_PROMT));
+		if (readKey(BUTTON_RISING)){
+			if (uart_stts) {
+				uartSendStringSize((uint8_t*) USART_MSG_RISE,
+						strlen((const char*) USART_MSG_RISE));
+				}
 		}
+
 	}
 
 	return (0);

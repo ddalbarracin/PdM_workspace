@@ -18,8 +18,15 @@
 #define UPTOFALL 40
 #define RISETODOWN 40
 
+/* Public typedef ------------------------------------------------------------*/
+/* Button State enum */
+typedef enum {
+	BUTTON_UP, BUTTON_FALLING, BUTTON_DOWN, BUTTON_RISING,
+} debounceState_t;
+
+
 /* Public Functions ----------------------------------------------------------*/
-bool_t readKey(void);
+bool_t readKey(uint8_t);
 void debounceFSM_init(void);
 void debounceFSM_update(void);
 
