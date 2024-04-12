@@ -27,6 +27,7 @@ static void lcdPORT_Cursor_Set(_Bool);
 static void lcdPORT_Delay(uint8_t);
 static void lcdPORT_DataFormat(uint8_t *);
 static void lcdPORT_Error_Handler(void);
+static void lcdPrint_FirstWrite(void);
 
 /*
  * @func   lcdControl_Comnd
@@ -64,6 +65,7 @@ _Bool lcdPORT_Init(void){
 		lcdPORT_Ctrl_Cmnd(DISPLAY_ON);
 		lcdPORT_Ctrl_Cmnd(CLEAR_LCD);
 		lcdPORT_Delay(DELAY5);
+		lcdPrint_FirstWrite();
 	}
 	return(stts);
 }
@@ -74,11 +76,26 @@ _Bool lcdPORT_Init(void){
  * @param  uint8_t
  * @retval void
  */
+//TODO hacer
 _Bool lcdPORT_DeInit(void){
 
 	_Bool stts = false;
 
 	return(stts);
+
+}
+
+
+static void lcdPrint_FirstWrite(void){
+
+	static const char lcd_blank[] = "          ";
+	lcdPORT_Ctrl_Cmnd(CLEAR_LCD);
+	lcdPORT_Ctrl_Cmnd(CLEAR_LCD);
+	lcdPORT_Print((uint8_t *)lcd_blank, DDRAM_LH, 3);
+	HAL_Delay(1);
+	lcdPORT_Print((uint8_t *)lcd_blank, DDRAM_LL, 3);
+	HAL_Delay(1);
+	lcdPORT_Ctrl_Cmnd(CLEAR_LCD);
 
 }
 
@@ -100,15 +117,13 @@ void lcdPORT_Clear(void){
  * @param  uint8_t
  * @retval _Bool
  */
-_Bool lcdPORT_Print(uint8_t *texto, uint8_t line, uint8_t position){
+void lcdPORT_Print(uint8_t *texto, uint8_t line, uint8_t position){
 
-	_Bool stts = true;
 	lcdPORT_Ctrl_Cmnd(RETURN_HOME);
 	lcdPORT_Line_Pos(line, position);
 
-
 	while(*texto)lcdPORT_Data_Cmnd(*texto++);
-	return(stts);
+	return;
 }
 
 /*
@@ -151,8 +166,8 @@ static void lcdPORT_Send_Byte(uint8_t data, uint8_t type){
 static void lcdPORT_Send_Nibble(uint8_t data, uint8_t type){
 
 	_Bool stts;
-	uint8_t fdata  = (data | type | ENABLE + BACK_LIGHT_ON);
-	uint8_t sdata = (data | type | BACK_LIGHT_ON);
+	uint8_t fdata  = ((data) | (type) | (ENABLE) | (BACK_LIGHT_ON));
+	uint8_t sdata = ((data) | (type) | (BACK_LIGHT_ON));
 
 	stts = i2cWrite(fdata);
 	if (stts == true){

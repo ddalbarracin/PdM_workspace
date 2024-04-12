@@ -15,10 +15,6 @@
 /* Private defines ------------------------------------------------------------*/
 static void cliError_Handler(void);
 
-/* Private Global Variables ------------------------------------------------------------*/
-//static const unsigned char DIA_SEM[][3] = { "LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM" };
-
-
 /* Functions ------------------------------------------------------------------*/
 /*
  * @func   cliInit
@@ -74,7 +70,9 @@ void cliPrint(uint8_t *msg1, uint8_t *msg2, uint8_t *msg3){
 	uint8_t concat = 0;
 	uint8_t indx = 0;
 	uint8_t length = 0;
+
 	memset(message, '\0', sizeof(message));
+
 	if (( msg1 != NULL )&&( msg2 != NULL )&&( msg3 != NULL )){
 
 		length =  strlen((const char *) msg1);
@@ -112,7 +110,7 @@ void cliPrint(uint8_t *msg1, uint8_t *msg2, uint8_t *msg3){
 				message[indx] = msg1[indx];
 				}
 			}
-			}
+		}
 	}
 
 	cliPORT_Print(message);
@@ -120,6 +118,7 @@ void cliPrint(uint8_t *msg1, uint8_t *msg2, uint8_t *msg3){
 	return;
 
 }
+
 
 /*
  * @func   cliError_Handler

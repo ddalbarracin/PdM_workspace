@@ -44,19 +44,27 @@
 /* Define for texting by UART ------------------------------------------------*/
 #define USART_MSG_NL					"\n\r"
 #define USART_MSG_STATUS				"DONE"
-#define USART_MSG_WELCOME				"UART Initialize Status: "
-#define USART_MSG_PROMT					"CESE-2024-PdM@ddalbarracin:\n\r"
+
+#define USART_MSG_WELCOME				"UART Initialize:"
+#define USART_MSG_STTS					"\tStatus: "
 #define USART_MSG_BaudRate 				"\tBaudRate: "
 #define USART_MSG_MODE 					"\tMode: "
 #define USART_MSG_WORDLENGTH			"\tWordLength: "
 #define USART_MSG_STOPBIT 				"\tStopBits: "
 #define USART_MSG_PARITY				"\tParity: "
-#define USART_MSG_WORD					8
-#define USART_MSG_STOPBITS				1
+
+#define USART_MSG_WORD					"8"
+#define USART_MSG_STOPBITS				"1"
+#define USART_MSG_BAUD_RATE				"9600"
 #define USART_MSG_PARITY_NONE			"None"
 #define USART_MSG_MODE_TXRX				"TxRx"
 #define USART_MSG_FALL					"Falling Edge\n\r"
 #define USART_MSG_RISE					"Rising Edge\n\r"
+
+#define USART_MSG_CESE					"*** CESE - 2024 ***\n\r"
+#define USART_MSG_AUTHOR				"Author: Daniel David Albarracin\n\r"
+#define USART_MSG_GIT					"github: @ddalbarracin\n\r"
+#define USART_MSG_SEP					"------------------------------------------------------------\n\r"
 
 /* Generic Defines  ----------------------------------------------------------*/
 #define MEM_CLR							'\0'

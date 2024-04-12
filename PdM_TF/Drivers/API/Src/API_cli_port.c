@@ -16,7 +16,7 @@
 static void cliPORT_Error_Handler(void);
 static void cliPORT_Get_Date(uint8_t []);
 static void cliPORT_Get_Time(uint8_t []);
-static void cliPORT_Data_Format(uint8_t *);
+//static void cliPORT_Data_Format(uint8_t *);
 
 
 /* Functions -------------------------------------------------------- */
@@ -68,15 +68,16 @@ _Bool cliPORT_Clear(void){
  */
 void cliPORT_Print(uint8_t *text){
 
-	volatile uint8_t timestamp[80];
+	uint8_t timestamp[80];
+	uint8_t hour[8];
+	uint8_t date[8];
 
-	uint8_t hour[8], date[8];
-	memset((uint8_t *)timestamp, '\0', sizeof(timestamp));
+	memset(timestamp, '\0', sizeof(timestamp));
 	memset(hour, '\0', sizeof(hour));
 	memset(date, '\0', sizeof(date));
 
-	cliPORT_Get_Date(hour);
-	cliPORT_Get_Time(date);
+	cliPORT_Get_Date(date);
+	cliPORT_Get_Time(hour);
 
 	strcpy((char *) timestamp, MSG_UART_TSTAMP_START);
 	for (int indx = 0; indx < sizeof(date); indx ++){
@@ -105,8 +106,8 @@ void cliPORT_Print(uint8_t *text){
  */
 static void cliPORT_Get_Date(uint8_t *date){
 
-	volatile date_t rtc_Date;
-	uint8_t dia[2], mes[2], anio[2];
+	volatile date_t rtc_Date = {0};
+	volatile uint8_t dia[2], mes[2], anio[2];
 
 	rtc_Date = rtcGetDate();
 
@@ -141,8 +142,12 @@ static void cliPORT_Get_Date(uint8_t *date){
  */
 static void cliPORT_Get_Time(uint8_t *hour){
 
-	volatile time_t rtc_Time;
+	time_t rtc_Time = { .hour = 0, .minute = 0, .second = 0};
 	uint8_t hora[2], min[2], seg[2];
+
+	memset(hora, '\0', sizeof(hora));
+	memset(min, '\0', sizeof(hora));
+	memset(seg, '\0', sizeof(hora));
 
 	rtc_Time = rtcGetTime();
 

@@ -5,7 +5,6 @@
  * @github  ddalbarracin
  * @brief   CESE - FIUBA 2024 - PdM - PCSE - Final Work
  *
- *
  * @date
  ******************************************************************************
  **/
@@ -60,7 +59,6 @@ int main(void) {
 	_Bool lcd_stts = false;
 	_Bool bmp_stts = false;
 	tick_t *ptrduty = duty_led;
-	uint8_t bmpID = 0;
 
 	/* Initialize BUTTONs */
 	Button_t button[] = { BUTTON_UP, BUTTON_DOWN, BUTTON_ENTER, BUTTON_BACK};

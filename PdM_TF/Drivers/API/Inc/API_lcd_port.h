@@ -78,6 +78,6 @@
 _Bool lcdPORT_Init(void);
 _Bool lcdPORT_DeInit(void);
 void lcdPORT_Clear(void);
-_Bool lcdPORT_Print(uint8_t *, uint8_t, uint8_t);
+void lcdPORT_Print(uint8_t *, uint8_t, uint8_t);
 
 #endif /* API_LCD_PORT */

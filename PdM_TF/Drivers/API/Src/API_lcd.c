@@ -24,16 +24,16 @@ typedef enum {
 /* Global Variable ---------------------------------------------------------- */
 static lcdFSMState_t LCDState;
 
-static const char lcd_title[] = "CESE-2024";
-static const char uart_author[] = " - Daniel David Albarracin - ";
-static const char uart_github[] = " @ddalbarracin";
+static const char uart_start[] = "Data Loger Start";
+static const char lcd_title[] = "***CESE--2024***";
 static const char lcd_alt[] = "Altitud";
 static const char lcd_temp[] = "Temperatura";
 static const char lcd_pres[] = "Presion";
 static const char lcd_opt1[] = "ALT: ";
 static const char lcd_opt1_unit[] = " [m]";
 static const char lcd_opt2[] = "TEMP: ";
-static const char lcd_opt2_unit[] = " [C]";
+static const char lcd_opt2_unit[] = {'[', 0xDF, 'C', ']'};
+static const char uart_opt2_unit[] = " [॰C]";
 static const char lcd_opt3[] = "PRES: ";
 static const char lcd_opt3_unit[] = " [hPa]";
 
@@ -50,6 +50,7 @@ static void lcdPrint_Opt2(uint8_t *);
 static void lcdPrint_Opt3(uint8_t *);
 static void lcdData2Ascii(float, uint8_t *);
 static void lcdError_Handler(void);
+
 /*
  * @func   lcdInit
  * @brief  Initialize LCD
@@ -90,10 +91,8 @@ _Bool lcdDeInit(void){
  */
 void lcdFSM_SysInit(void){
 	LCDState = LCD_STATE_MENU1;
-	cliPrint((uint8_t *) lcd_title, (uint8_t *) uart_author, (uint8_t *) uart_github);
-	//cliPrint((uint8_t *) lcd_title, NULL, NULL);
+	cliPrint((uint8_t *) uart_start, NULL, NULL);
 	lcdPrint_Menu1();
-
 
 }
 
@@ -251,9 +250,9 @@ static void lcdPrint_Menu1(void){
 
 	lcdClear();
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_title, DDRAM_LH, 3);
+	lcdPrint((uint8_t *)lcd_title, DDRAM_LH, 0);
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_alt, DDRAM_LL, 3);
+	lcdPrint((uint8_t *)lcd_alt, DDRAM_LL, 0);
 	HAL_Delay(1);
 
 }
@@ -268,9 +267,9 @@ static void lcdPrint_Menu2(void){
 
 	lcdClear();
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_alt, DDRAM_LH, 3);
+	lcdPrint((uint8_t *)lcd_alt, DDRAM_LH, 0);
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_temp, DDRAM_LL, 3);
+	lcdPrint((uint8_t *)lcd_temp, DDRAM_LL, 0);
 	HAL_Delay(1);
 
 }
@@ -285,9 +284,9 @@ static void lcdPrint_Menu3(void){
 
 	lcdClear();
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_temp, DDRAM_LH, 3);
+	lcdPrint((uint8_t *)lcd_temp, DDRAM_LH, 0);
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_pres, DDRAM_LL, 3);
+	lcdPrint((uint8_t *)lcd_pres, DDRAM_LL, 0);
 	HAL_Delay(1);
 
 }
@@ -326,7 +325,7 @@ static void lcdPrint_Opt2(uint8_t *pmsr){
 	HAL_Delay(1);
 	if (pmsr != NULL){
 		lcdPrint(pmsr, DDRAM_LH, 5);
-		cliPrint((uint8_t *) lcd_opt2, (uint8_t *) pmsr, (uint8_t *) lcd_opt2_unit);
+		cliPrint((uint8_t *) lcd_opt2, (uint8_t *) pmsr, (uint8_t *) uart_opt2_unit);
 	}
 	HAL_Delay(1);
 	lcdPrint((uint8_t *)lcd_opt2_unit, DDRAM_LH, 12);

@@ -138,24 +138,30 @@ void Error_Handler(HAL_StatusTypeDef status) {
  * @retval None
  */
 static void uartInitMessage(void) {
+
 	char msg[80];
-	char itoa_msg[5];
 
 	uint8_t *ptrstring = NULL;
-	char *ptrItoa = NULL;
 	ptrstring = (uint8_t*) msg;
 
 	memset(msg, MEM_CLR, sizeof(msg));
+	strcpy(msg, USART_MSG_SEP);
+	uartSendString(ptrstring);
+
+	memset(msg, MEM_CLR, sizeof(msg));
 	strcpy(msg, USART_MSG_WELCOME);
+	strcat(msg, USART_MSG_NL);
+	uartSendString(ptrstring);
+
+	memset(msg, MEM_CLR, sizeof(msg));
+	strcpy(msg, USART_MSG_STTS);
 	strcat(msg, USART_MSG_STATUS);
 	strcat(msg, USART_MSG_NL);
 	uartSendString(ptrstring);
 
 	memset(msg, MEM_CLR, sizeof(msg));
-	memset(itoa_msg, MEM_CLR, sizeof(itoa_msg));
 	strcpy(msg, USART_MSG_BaudRate);
-	ptrItoa = utoa(USARTx_BAUD_RATE, itoa_msg, 10);
-	strcat(msg, (const char*) ptrItoa);
+	strcat(msg, USART_MSG_BAUD_RATE);
 	strcat(msg, USART_MSG_NL);
 	uartSendString(ptrstring);
 
@@ -166,18 +172,14 @@ static void uartInitMessage(void) {
 	uartSendString(ptrstring);
 
 	memset(msg, MEM_CLR, sizeof(msg));
-	memset(itoa_msg, MEM_CLR, sizeof(itoa_msg));
 	strcpy(msg, USART_MSG_WORDLENGTH);
-	ptrItoa = utoa(USART_MSG_WORD, itoa_msg, 10);
-	strcat(msg, (const char*) ptrItoa);
+	strcat(msg, USART_MSG_WORD);
 	strcat(msg, USART_MSG_NL);
 	uartSendString(ptrstring);
 
 	memset(msg, MEM_CLR, sizeof(msg));
-	memset(itoa_msg, MEM_CLR, sizeof(itoa_msg));
 	strcpy(msg, USART_MSG_STOPBIT);
-	ptrItoa = utoa(USART_MSG_STOPBITS, itoa_msg, 10);
-	strcat(msg, (const char*) ptrItoa);
+	strcat(msg, USART_MSG_STOPBITS);
 	strcat(msg, USART_MSG_NL);
 	uartSendString(ptrstring);
 
@@ -185,6 +187,18 @@ static void uartInitMessage(void) {
 	strcpy(msg, USART_MSG_PARITY);
 	strcat(msg, USART_MSG_PARITY_NONE);
 	strcat(msg, USART_MSG_NL);
+	uartSendString(ptrstring);
+
+	memset(msg, MEM_CLR, sizeof(msg));
+	strcpy(msg, USART_MSG_SEP);
+	uartSendString(ptrstring);
+
+	uartSendString((uint8_t *) USART_MSG_CESE);
+	uartSendString((uint8_t *) USART_MSG_AUTHOR);
+	uartSendString((uint8_t *) USART_MSG_GIT);
+
+	memset(msg, MEM_CLR, sizeof(msg));
+	strcpy(msg, USART_MSG_SEP);
 	uartSendString(ptrstring);
 
 	return;

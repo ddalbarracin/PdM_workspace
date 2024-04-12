@@ -67,14 +67,9 @@ _Bool PB_PORT_Init(uint8_t button){
  */
 GPIO_PinState PB_PORT_GetState(uint8_t button){
 
-	_Bool portstts = false;
-
 	GPIO_PinState pbStatus;
 
 	pbStatus = GPIO_GetState(&ptrButton[button]);
-	if (pbStatus == GPIO_PIN_SET){
-		portstts = true;
-	}
 
 	return(pbStatus);
 }
