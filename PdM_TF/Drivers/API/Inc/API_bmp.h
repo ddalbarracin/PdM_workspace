@@ -1,10 +1,9 @@
 /**
  ******************************************************************************
- * @file    API_bmp_port.h
+ * @file    API_bmp.h
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	Header of API_bmp_port.c
+ * @brief   Header of API_bmp.c
  *
  ******************************************************************************
  **/
@@ -21,12 +20,10 @@
 
 /* Functions ------------------------------------------------------------------ */
 _Bool bmpInit(void);
-_Bool bmpDeInit(void);
-uint8_t bmpGet_ID(void);
+void bmpDeInit(void);
 float bmpGet_Temp(void);
 float bmpGet_Press(void);
 float bmpGet_Alt(void);
-
 
 
 #endif /* API_BMP */

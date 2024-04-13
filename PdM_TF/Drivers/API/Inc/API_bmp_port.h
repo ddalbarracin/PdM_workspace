@@ -3,8 +3,7 @@
  * @file    API_bmp_port.h
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	Header of API_bmp_port.c
+ * @brief   Header of API_bmp_port.c
  *
  ******************************************************************************
  **/
@@ -17,6 +16,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 /* Private defines ------------------------------------------------------------*/
 /* Definition for BMP resources */
@@ -45,7 +45,7 @@
 #define BMP_SW_RST					0xB6	// Software Reset
 
 /* Parameters ------------------------------------------------------------------*/
-#define BMP_PARAM_ID				0x58
+#define BMP_PARAM_ID				0x58	// BMP Device ID
 
 /* DataSheet Table 7:
  * Recommended filter settings
@@ -69,13 +69,11 @@
 
 /* Prototype Declaration Functions -------------------------------------------------------------------*/
 _Bool bmpPORT_Init(void);
-_Bool bmpPORT_DeInit(void);
+void bmpPORT_DeInit(void);
 uint8_t bmpPORT_GetID(void);
-
 float bmpPORT_Get_Temp(void);
 float bmpPORT_Get_Press(void);
 float bmpPORT_Get_Alt(void);
-
 
 
 #endif /* API_BMP_PORT */

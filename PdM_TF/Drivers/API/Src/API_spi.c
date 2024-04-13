@@ -3,12 +3,10 @@
  * @file    API_spi.c
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	File to manage spi hardware module
+ * @brief   File to manage SPI Hardware Module
  *
  ******************************************************************************
  **/
-
 /* Includes ------------------------------------------------------------------ */
 #include "API_spi.h"
 
@@ -18,23 +16,20 @@ static GPIO_InitTypeDef spiCSHandler;
 
 /* Declarate Functions ----------------------------------------------------------*/
 static void spiError_Handler(HAL_StatusTypeDef);
-
-static void spiMspInit(SPI_HandleTypeDef *);
+static void spiMspInit(SPI_HandleTypeDef*);
 static void spiMspDeInit(void);
 static void spiCSGPIOInit(void);
 static void spiCSGPIODeInit(void);
-
 static void spiCSLow(void);
 static void spiCSHigh(void);
 static uint8_t spiReadWrite(uint8_t);
-
 
 /* Private Functions ----------------------------------------------------------*/
 /**
  * @func   spiInit
  * @brief  Initialize SPI Protocol Parameters
  * @param  None
- * @retval bool_t
+ * @retval _Bool
  */
 _Bool spiInit(void){
 
@@ -57,14 +52,19 @@ _Bool spiInit(void){
 	spiMspInit(&spiHandler);
 
 	spi_stts = HAL_SPI_Init(&spiHandler);
+
 	if(spi_stts == HAL_OK){
+
 		stts = true;
 		spiCSGPIOInit();
 
 	}
 	else{
+
 		spiError_Handler(spi_stts);
+
 	}
+
 	return(stts);
 }
 
@@ -74,14 +74,12 @@ _Bool spiInit(void){
  * @param  None
  * @retval None
  */
-_Bool spiDeInit(void){
-
-	_Bool stts = true;
+void spiDeInit(void){
 
 	spiMspDeInit();
 	spiCSGPIODeInit();
 
-	return(stts);
+	return;
 }
 
 /**
@@ -93,46 +91,67 @@ _Bool spiDeInit(void){
 uint8_t spiREGRead(uint8_t addr){
 
 	uint8_t spiValue;
+
 	spiCSLow();
+
 	spiReadWrite(addr);
 	spiValue = spiReadWrite(0);
+
 	spiCSHigh();
 
 	return(spiValue);
+
 }
 
 /**
  * @func   spiREGWrite
- * @brief  Regsiter Read from SPI
+ * @brief  Write a regsiter to SPI
  * @param  uint8_t, uint8_t
- * @retval uint8_t
+ * @retval None
  */
 void spiREGWrite(uint8_t addr, uint8_t value){
 
 	uint8_t spiAddr;
+
 	spiAddr = addr & SPI_WRITE_MASK;
 	spiCSLow();
+
 	spiReadWrite(spiAddr);
 	spiReadWrite(value);
+
 	spiCSHigh();
 
+	return;
 }
 
-
+/**
+ * @func   spiBULKRead
+ * @brief  Read Multiples Register from SPI
+ * @param  uint8_t, uint8_t*, uint8_t
+ * @retval None
+ */
 void spiBULKRead(uint8_t addr, uint8_t *bulk, uint8_t length){
 
 	spiCSLow();
+
 	spiReadWrite(addr);
 	while(--length){
+
 		*bulk ++=spiReadWrite(0);
+
 	}
+
 	spiCSHigh();
+
+	return;
+
 }
+
 /**
- * @func   spiWrite
- * @brief  Write to SPI
- * @param  uint8_t *
- * @retval None
+ * @func   spiReadWrite
+ * @brief  Write or Read to/from SPI
+ * @param  uint8_t
+ * @retval uint8_t
  */
 static uint8_t spiReadWrite(uint8_t spiTxDato){
 
@@ -142,7 +161,9 @@ static uint8_t spiReadWrite(uint8_t spiTxDato){
 	spi_stts = HAL_SPI_TransmitReceive(&spiHandler, &spiTxDato, &spiRxDato, ONLY_BYTE, HAL_MAX_DELAY);
 
 	if(spi_stts != HAL_OK){
+
 		spiError_Handler(spi_stts);
+
 	}
 
 	return(spiRxDato);
@@ -150,9 +171,9 @@ static uint8_t spiReadWrite(uint8_t spiTxDato){
 
 /**
  * @func   spiMspInit
- * @brief  Initialize SPI Hardware Module
- * @param  None
- * @retval bool_t
+ * @brief  Initialize SPI Low Level Resources Hardware
+ * @param  SPI_HandleTypeDef*
+ * @retval None
  */
 static void spiMspInit(SPI_HandleTypeDef *hspi){
 
@@ -174,14 +195,15 @@ static void spiMspInit(SPI_HandleTypeDef *hspi){
 	/* Enable Peripheral clock */
 	SPI1_PERPH_CLK_ENABLE();
 
+	return;
 
 }
 
 /**
  * @func   spiMspDeInit
- * @brief  DeInitialize SPI Hardware Module
+ * @brief  DeInitialize SPI Low Level Resources Hardware
  * @param  None
- * @retval bool_t
+ * @retval None
  */
 static void spiMspDeInit(void){
 
@@ -190,11 +212,14 @@ static void spiMspDeInit(void){
 
 	/* Disable Peripheral clock */
 	SPI1_PERPH_CLK_DISABLE();
+
+	return;
+
 }
 
 /**
- * @func   spiGPIOInit
- * @brief  Initialize CS SPI Hardware PIN
+ * @func   spiCSGPIOInit
+ * @brief  Initialize CS (Chip Select) SPI Hardware I/O
  * @param  None
  * @retval None
  */
@@ -210,11 +235,13 @@ static void spiCSGPIOInit(void){
 	spiCSHandler.Speed = SPI1_CS_GPIO_SPEED;
 	HAL_GPIO_Init(SPI1_CS_PORT, &spiCSHandler);
 
+	return;
+
 }
 
 /**
- * @func   spiGPIOInit
- * @brief  Initialize CS SPI Hardware PIN
+ * @func   spiCSGPIODeInit
+ * @brief  DeInitialize CS SPI Hardware I/O
  * @param  None
  * @retval None
  */
@@ -226,35 +253,39 @@ static void spiCSGPIODeInit(void){
 
 /**
  * @func   spiCSLow
- * @brief
+ * @brief  Put to LOW CS PIN
  * @param  None
  * @retval None
  */
 static void spiCSLow(void){
 
 	HAL_GPIO_WritePin(SPI1_CS_PORT, spiCSHandler.Pin, GPIO_PIN_RESET);
+
+	return;
+
 }
 
 /**
  * @func   spiCSHigh
- * @brief
+ * @brief  Put to High CS PIN
  * @param  None
  * @retval None
  */
 static void spiCSHigh(void){
 
 	HAL_GPIO_WritePin(SPI1_CS_PORT, spiCSHandler.Pin, GPIO_PIN_SET);
-}
 
+	return;
+
+}
 
 /**
  * @func   spiError_Handler
- * @brief  Control Error for SPI Software Module
- * @param  None
+ * @brief  Catch an Error
+ * @param  HAL_StatusTypeDef
  * @retval None
  */
 static void spiError_Handler(HAL_StatusTypeDef){
-
 	while(1){
 
 	}

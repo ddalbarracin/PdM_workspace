@@ -3,17 +3,15 @@
  * @file    API_rtc.c
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	This files contain function to manage Real Time Clock
+ * @brief  This file manage Real Time Clock
  *
  ******************************************************************************
  **/
-
 /* Includes -------------------------------------------------------------------*/
 #include "API_rtc.h"
 #include "stm32f4xx_hal_rtc.h"
 #include "stm32f4xx_hal_rcc.h"
-
+#include "stm32f4xx_hal_pwr.h"
 
 /* Global Variables -----------------------------------------------------------*/
 static RTC_HandleTypeDef rtcHandler;
@@ -22,8 +20,8 @@ volatile date_t rtc_Current_Date;
 
 /* Private Functions ----------------------------------------------------------*/
 static void rtcError_Handler(HAL_StatusTypeDef);
-static void rtcMspInit(RTC_HandleTypeDef *hrtc);
-static void rtcMspDeInit(RTC_HandleTypeDef *hrtc);
+static void rtcMspInit(RTC_HandleTypeDef*);
+static void rtcMspDeInit(void);
 static _Bool rtcSetTime(void);
 static _Bool rtcSetDate(void);
 
@@ -37,7 +35,7 @@ static _Bool rtcSetDate(void);
 _Bool rtcInit(void) {
 
 	HAL_StatusTypeDef rtc_stts;
-	bool_t stts = false;
+	_Bool stts = false;
 
 	rtcHandler.Instance = RTC_HW;
 	rtcHandler.Init.HourFormat = RTC_HOUR_FRMT;
@@ -53,11 +51,15 @@ _Bool rtcInit(void) {
 	if (rtc_stts == HAL_OK) {
 
 		if((rtcSetDate())&&(rtcSetTime())){
+
 			stts = true;
+
 		}
 
 	} else {
+
 		rtcError_Handler(rtc_stts);
+
 	}
 
 	return (stts);
@@ -74,12 +76,17 @@ _Bool rtcDeInit(void){
 	HAL_StatusTypeDef rtc_stts;
 	_Bool stts = false;
 
-	rtcMspDeInit(&rtcHandler);
+	rtcMspDeInit();
 	rtc_stts = HAL_RTC_DeInit(&rtcHandler);
+
 	if (rtc_stts == HAL_OK) {
+
 		stts = true;
+
 	}else {
+
 		rtcError_Handler(rtc_stts);
+
 	}
 
 	return (stts);
@@ -92,8 +99,8 @@ _Bool rtcDeInit(void){
  * @retval None
  */
 static void rtcMspInit(RTC_HandleTypeDef *hrtc) {
-	HAL_StatusTypeDef rtc_stts;
 
+	HAL_StatusTypeDef rtc_stts;
 	RCC_OscInitTypeDef RCC_OscInitStruct;
 	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
@@ -105,22 +112,27 @@ static void rtcMspInit(RTC_HandleTypeDef *hrtc) {
 	rtc_stts = HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
 	if (rtc_stts != HAL_OK) {
+
 		rtcError_Handler(rtc_stts);
+
 	}
 
 	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
 	PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-
 	rtc_stts = HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
 
 	if (rtc_stts != HAL_OK) {
+
 		rtcError_Handler(rtc_stts);
+
 	}
 
 	/* Enable RTC Clock */
 	HAL_PWR_EnableBkUpAccess();
 	__HAL_RCC_RTC_CONFIG(RCC_RTCCLKSOURCE_LSE);
 	__HAL_RCC_RTC_ENABLE();
+
+	return;
 }
 
 /**
@@ -129,11 +141,13 @@ static void rtcMspInit(RTC_HandleTypeDef *hrtc) {
  * @param  RTC_HandleTypeDef *
  * @retval None
  */
-static void rtcMspDeInit(RTC_HandleTypeDef *hrtc){
+static void rtcMspDeInit(void){
 
 	/* Disable RTC Clock */
 	HAL_PWR_DisableBkUpAccess();
 	__HAL_RCC_RTC_DISABLE();
+
+	return;
 
 }
 
@@ -141,7 +155,7 @@ static void rtcMspDeInit(RTC_HandleTypeDef *hrtc){
  * @func   rtcGetTime
  * @brief  get RTC Time
  * @param  None
- * @retval None
+ * @retval time_t
  */
 time_t rtcGetTime(void) {
 
@@ -160,8 +174,11 @@ time_t rtcGetTime(void) {
 
 	}
 	else{
+
 		rtcError_Handler(rtc_stts);
+
 	}
+
 	return(rtc_Current_Time);
 
 }
@@ -176,7 +193,7 @@ _Bool rtcSetTime(void){
 
 	HAL_StatusTypeDef rtc_stts;
 	RTC_TimeTypeDef rtcTime;
-	bool_t stts = false;
+	_Bool stts = false;
 
 	rtcTime.Hours = RTC_SET_TIME_HOUR;
 	rtcTime.Minutes = RTC_SET_TIME_MINUTE;
@@ -188,11 +205,15 @@ _Bool rtcSetTime(void){
 	rtc_stts = HAL_RTC_SetTime(&rtcHandler, &rtcTime, RTC_FORMAT_BCD);
 
 	if (rtc_stts == HAL_OK){
+
 		stts = true;
+
 	}
 	else{
+
 		rtcError_Handler(rtc_stts);
 	}
+
 	return(stts);
 
 }
@@ -220,10 +241,13 @@ date_t rtcGetDate(void) {
 
 	}
 	else{
+
 		rtcError_Handler(rtc_stts);
+
 	}
 
 	return(rtc_Current_Date);
+
 }
 
 /**
@@ -236,7 +260,7 @@ _Bool rtcSetDate(void) {
 
 	HAL_StatusTypeDef rtc_stts;
 	RTC_DateTypeDef rtcDate;
-	bool_t stts = false;
+	_Bool stts = false;
 
 	rtcDate.WeekDay = RTC_SET_DATE_WDAY;
 	rtcDate.Month = RTC_SET_DATE_MONTH;
@@ -246,10 +270,14 @@ _Bool rtcSetDate(void) {
 	rtc_stts = HAL_RTC_SetDate(&rtcHandler, &rtcDate, RTC_FORMAT_BCD);
 
 	if (rtc_stts == HAL_OK){
+
 		stts = true;
+
 	}
 	else{
+
 		rtcError_Handler(rtc_stts);
+
 	}
 
 	return(stts);
@@ -259,8 +287,8 @@ _Bool rtcSetDate(void) {
 /**
  * @func   rtcError_Handler
  * @brief  Catch RTC Errors
- * @param  None
- * @retval _Bool
+ * @param  HAL_StatusTypeDef*
+ * @retval None
  */
 static void rtcError_Handler(HAL_StatusTypeDef stts) {
 	while (1) {

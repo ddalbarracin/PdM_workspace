@@ -3,20 +3,16 @@
  * @file    API_bmp_port.c
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	File to manage bmp_port
+ * @brief   File to interface between bmp user API and spi protocol
  ******************************************************************************
  **/
-
 /* Includes ------------------------------------------------------------------ */
 #include "API_bmp_port.h"
 #include "API_spi.h"
-#include <math.h>
 
 /* Declarate Functions ----------------------------------------------------------*/
 static void bmpPORT_Error_Handler(void);
 static void bmpPORT_Delay(uint32_t);
-
 static _Bool bmpPORT_BMP_Config(void);
 static void bmpPORT_Set_OSPress(void);
 static void bmpPORT_Set_OSTemp(void);
@@ -53,18 +49,16 @@ typedef struct{
 	float alt;
 }bmpMsrmt_t;
 
-
 /* Global Variables ----------------------------------------------------------*/
 static bmpMsrmt_t measr;
 static bmpCompP_t compParams;
 static float refPress = 0;
 static int32_t temp_fine = 0;
 
-
 /* Private Functions ----------------------------------------------------------*/
 /**
- * @func   spiPORT_Init
- * @brief  Initialize SPI PORT
+ * @func   bmpPORT_Init
+ * @brief  Initialize BMP Hardware
  * @param  None
  * @retval _Bool
  */
@@ -87,27 +81,22 @@ _Bool bmpPORT_Init(void){
 }
 
 /**
- * @func   spiPORT_DeInit
- * @brief  Initialize SPI Protocol Parameters
+ * @func   bmpPORT_DeInit
+ * @brief  DeInitialize BMP Hardware
  * @param  None
  * @retval _Bool
  */
-_Bool bmpPORT_DeInit(void){
-	_Bool stts = false;
+void bmpPORT_DeInit(void){
 
-	stts = spiDeInit();
+	spiDeInit();
 
-	if (stts == false){
-
-		bmpPORT_Error_Handler();
-	}
-	return(stts);
+	return;
 
 }
 
 /**
  * @func   bmpPORT_GetID
- * @brief
+ * @brief  Get ID of BMP Device
  * @param  None
  * @retval uint8_t
  */
@@ -118,12 +107,13 @@ uint8_t bmpPORT_GetID(void){
 	bmpID = spiREGRead(BMP_REG_ID);
 
 	return(bmpID);
+
 }
 /**
  * @func   bmpPORT_Get_Temp
- * @brief
+ * @brief  Get Temperature from BMP device
  * @param  None
- * @retval uint32_t *
+ * @retval float
  */
 float bmpPORT_Get_Temp(void){
 
@@ -138,12 +128,13 @@ float bmpPORT_Get_Temp(void){
 	measr.temp = (float)(bmp280_compensate_T_int32(msrdTemp)/100.0);
 
 	return(measr.temp);
+
 }
 /**
  * @func   bmpPORT_Get_Pres
- * @brief
+ * @brief  Get pressure from BMP Device
  * @param  None
- * @retval uint32_t *
+ * @retval float
  */
 float bmpPORT_Get_Press(void){
 
@@ -157,13 +148,14 @@ float bmpPORT_Get_Press(void){
 	measr.press = (float)(bmp280_compensate_P_int64(msrdPress)/256.0);
 
 	return(measr.press);
+
 }
 
 /**
  * @func   bmpPORT_Get_Alt
- * @brief
+ * @brief  Get Altitude from BMP Device
  * @param  None
- * @retval uint32_t *
+ * @retval float
  */
 float bmpPORT_Get_Alt(void){
 
@@ -173,10 +165,15 @@ float bmpPORT_Get_Alt(void){
 	if (refPress != 0){
 
 		if(measr.press != 0){
+
 			msrdPress = measr.press;
+
 		}else{
+
 			msrdPress = bmpPORT_Get_Press();
+
 		}
+
 		msrdAlt = (float)(1.0 - pow(msrdPress / refPress, 0.1903)) * 4433076.0;
 		measr.alt = msrdAlt;
 	}
@@ -187,9 +184,9 @@ float bmpPORT_Get_Alt(void){
 
 /**
  * @func   bmpPORT_BMP_Config
- * @brief  Initilize BMP Config
+ * @brief  BMP Device Configuration
  * @param  None
- * @retval None
+ * @retval _Bool
  */
 static _Bool bmpPORT_BMP_Config(void){
 
@@ -251,6 +248,8 @@ static void bmpPORT_Set_OSPress(void){
 	msrmnt_reg |= BMP_PARAM_OSRP;
 	spiREGWrite(BMP_REG_CTRL_MEAS, msrmnt_reg);
 
+	return;
+
 }
 
 /**
@@ -267,6 +266,8 @@ static void bmpPORT_Set_OSTemp(void){
 	msrmnt_reg &= BMP_PARAM_OSRT_MASK;
 	msrmnt_reg |= BMP_PARAM_OSRT;
 	spiREGWrite(BMP_REG_CTRL_MEAS, msrmnt_reg);
+
+	return;
 
 }
 
@@ -285,11 +286,13 @@ static void bmpPORT_Set_PWRMode(void){
 	msrmnt_reg |= BMP_PARAM_PWR_MODE;
 	spiREGWrite(BMP_REG_CTRL_MEAS, msrmnt_reg);
 
+	return;
+
 }
 
 /**
- * @func   bmpPORT_Set_OSTemp
- * @brief
+ * @func   bmpPORT_Set_IIRCnfg
+ * @brief  Set IIR Filter Config
  * @param  None
  * @retval None
  */
@@ -302,11 +305,13 @@ static void bmpPORT_Set_IIRCnfg(void){
 	cnfg_reg |= BMP_PARAM_IIR;
 	spiREGWrite(BMP_REG_CNFG, cnfg_reg);
 
+	return;
+
 }
 
 /**
  * @func   bmpPORT_StandBy
- * @brief
+ * @brief  Set Measure Period
  * @param  None
  * @retval None
  */
@@ -319,11 +324,13 @@ static void bmpPORT_Set_StandBy(void){
 	cnfg_reg |= BMP_PARAM_STANDBY_MODE;
 	spiREGWrite(BMP_REG_CNFG, cnfg_reg);
 
+	return;
+
 }
 
 /**
  * @func   bmpPORT_Reset
- * @brief
+ * @brief  Software Reset
  * @param  None
  * @retval None
  */
@@ -331,11 +338,13 @@ static void bmpPORT_Set_Reset(void){
 
 	spiREGWrite(BMP_REG_RST, BMP_SW_RST);
 
+	return;
+
 }
 
 /**
  * @func   bmpPORT_CompParam
- * @brief
+ * @brief  Get Compensation Parameters
  * @param  None
  * @retval None
  */
@@ -359,11 +368,13 @@ static void bmpPORT_Get_CompParam(void){
 	compParams.dig_P8 = (cmpBuffer[21]<<8 | cmpBuffer[20]);
 	compParams.dig_P9 = (cmpBuffer[23]<<8 | cmpBuffer[22]);
 
+	return;
+
 }
 
 /**
  * @func   bmpPORT_Set_Ref
- * @brief
+ * @brief  Set Altitude Reference
  * @param  None
  * @retval None
  */
@@ -371,6 +382,7 @@ static void bmpPORT_Set_Ref(void){
 
 	float avrg = 0;
 	uint8_t indx;
+
 	for(indx = 0; indx < BMP_SET_PRESS_REF_SMPL; indx ++){
 
 		avrg += bmpPORT_Get_Press();
@@ -379,6 +391,9 @@ static void bmpPORT_Set_Ref(void){
 	}
 
 	refPress = (avrg/BMP_SET_PRESS_REF_SMPL);
+
+	return;
+
 }
 
 /**
@@ -426,40 +441,48 @@ static uint32_t bmp280_compensate_P_int64(int32_t msrdPress){
 
 	var1 = ((int64_t)(temp_fine)) - 128000;
 	var2 = var1 * var1 * (int64_t)compParams.dig_P6;
-	var2 = var2 + ((var1*(int64_t)compParams.dig_P5)<<17);
-	var2 = var2 + (((int64_t)compParams.dig_P4)<<35);
-	var1 = ((var1 * var1 * (int64_t)compParams.dig_P3)>>8) + ((var1 * (int64_t)compParams.dig_P2)<<12);
-	var1 = (((((int64_t)1)<<47)+var1))*((int64_t)compParams.dig_P1)>>33;
+	var2 = var2 + ((var1 * (int64_t)compParams.dig_P5) << 17);
+	var2 = var2 + (((int64_t)compParams.dig_P4) << 35);
+	var1 = ((var1 * var1 * (int64_t)compParams.dig_P3) >> 8) + ((var1 * (int64_t)compParams.dig_P2) << 12);
+	var1 = (((((int64_t)1) << 47)+var1)) * ((int64_t)compParams.dig_P1) >> 33;
 	if (var1 == 0)
 	{
 		return 0; // avoid exception caused by division by zero
 	}
 	Press = 1048576 - msrdPress;
-	Press = (((Press<<31)-var2)*3125)/var1;
-	var1 = (((int64_t)compParams.dig_P9) * (Press>>13) * (Press>>13)) >> 25;
+	Press = (((Press << 31) - var2) * 3125) / var1;
+	var1 = (((int64_t)compParams.dig_P9) * (Press >> 13) * (Press >> 13)) >> 25;
 	var2 = (((int64_t)compParams.dig_P8) * Press) >> 19;
-	Press = ((Press + var1 + var2) >> 8) + (((int64_t)compParams.dig_P7)<<4);
+	Press = ((Press + var1 + var2) >> 8) + (((int64_t)compParams.dig_P7) << 4);
 
 	return ((uint32_t)Press);
+
 }
 
 /**
  * @func   bmpPORT_Delay
- * @brief
+ * @brief  Make a Delay
  * @param  uint32_t
  * @retval none
  */
 static void bmpPORT_Delay(uint32_t delay){
+
 	HAL_Delay(delay);
+
+	return;
+
 }
 
 /**
  * @func   bmpPORT_Error_Handler
- * @brief
+ * @brief  Catch an BMP Device Error
  * @param  None
- * @retval uint8_t *
+ * @retval None
  */
 static void bmpPORT_Error_Handler(void){
+	while(1){
+
+	}
 
 }
 

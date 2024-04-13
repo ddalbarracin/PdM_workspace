@@ -3,17 +3,13 @@
  * @file    API_cli.c
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	This file manage message to cli by uart and using rtc
+ * @brief   This file manage messages to cli by uart and using rtc
  *
  ******************************************************************************
  **/
 /* Includes ------------------------------------------------------------------ */
 #include "API_cli.h"
-
-
-/* Private defines ------------------------------------------------------------*/
-static void cliError_Handler(void);
+#include "API_cli_port.h"
 
 /* Functions ------------------------------------------------------------------*/
 /*
@@ -25,6 +21,8 @@ static void cliError_Handler(void);
 _Bool cliInit(void){
 
 	_Bool stts = false;
+
+	stts = cliPORT_Init();
 
 	return(stts);
 
@@ -39,6 +37,8 @@ _Bool cliInit(void){
 _Bool cliDeInit(void){
 
 	_Bool stts = false;
+
+	stts = cliPORT_DeInit();
 
 	return(stts);
 
@@ -60,9 +60,9 @@ _Bool cliClear(void){
 
 /*
  * @func   cliPrint
- * @brief
- * @param  uint8_t *
- * @retval _Bool
+ * @brief  Print message by uart
+ * @param  uint8_t*, uint8_t*, uint8_t*
+ * @retval None
  */
 void cliPrint(uint8_t *msg1, uint8_t *msg2, uint8_t *msg3){
 
@@ -119,14 +119,3 @@ void cliPrint(uint8_t *msg1, uint8_t *msg2, uint8_t *msg3){
 
 }
 
-
-/*
- * @func   cliError_Handler
- * @brief
- * @param  uint8_t *
- * @retval _Bool
- */
-static void cliError_Handler(void){
-	while(1){
-	}
-}

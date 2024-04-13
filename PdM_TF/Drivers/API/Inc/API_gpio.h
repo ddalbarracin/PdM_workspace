@@ -1,8 +1,10 @@
 /**
  ******************************************************************************
- * @file    API/Inc/API_gpio.h
+ * @file    API_gpio.h
  * @author  Daniel David Albarracin
+ * @github  ddalbarracin
  * @brief   Header for API_gpio.c module
+ *
  ******************************************************************************
  */
 /* include guard -------------------------------------------------------------*/
@@ -14,7 +16,6 @@
 #include <stdbool.h>
 #include "API_button_port.h"
 #include "stm32f4xx_nucleo_144.h"
-
 
 /* Defines  -----------------------------------------------------------------*/
 #define PButton_GPIO_PORT_CLK_ENABLE(PB_PORT) 		if (PB_PORT == GPIOC) \

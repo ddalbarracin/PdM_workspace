@@ -16,9 +16,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
-#include "API_Delay.h"
-#include "API_lcd_port.h"
+
 
 /* Defines -------------------------------------------------------------------- */
 #define LCD_MENU1_LH			"CESE-2024-MENU"
@@ -36,10 +34,10 @@
 
 /* Prototypes Functions ------------------------------------------------------ */
 _Bool lcdInit(void);
-_Bool lcdDeInit(void);
+void lcdDeInit(void);
 void lcdClear(void);
 void lcdFSM_SysInit(void);
 void lcdFSM_SysUpdate(void);
-void lcdPrint(uint8_t *, const uint8_t, uint8_t);
+
 
 #endif /* API_LCD */

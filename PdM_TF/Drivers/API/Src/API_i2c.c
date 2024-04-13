@@ -3,18 +3,13 @@
  * @file    API_i2c.c
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	File to manage i2c hardware module
+ * @brief   File to manage i2c hardware module
  *
  ******************************************************************************
  **/
 
 /* Includes ------------------------------------------------------------------ */
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include "API_i2c.h"
-
 
 /* Global Variables -----------------------------------------------------------*/
 static I2C_HandleTypeDef i2cHandler;
@@ -65,12 +60,11 @@ _Bool i2cInit(void){
  * @param  None
  * @retval None
  */
-bool_t i2cDeInit(void){
-	_Bool stts = false;
+void i2cDeInit(void){
 
 	i2cMspDeInit();
 
-	return(stts);
+	return;
 }
 
 /**
@@ -99,6 +93,8 @@ static void i2cMspInit(I2C_HandleTypeDef *hi2c){
 	/* Enable RCC clock */
 	I2C1_PERPH_CLK_ENABLE();
 
+	return;
+
 }
 
 /**
@@ -114,6 +110,9 @@ static void i2cMspDeInit(void){
 
 	/* Disable Peripheral clock */
 	I2C1_PERPH_CLK_DISABLE();
+
+	return;
+
 }
 
 /**
@@ -122,19 +121,23 @@ static void i2cMspDeInit(void){
  * @param  None
  * @retval None
  */
-bool_t i2cWrite(uint8_t data){
+_Bool i2cWrite(uint8_t data){
 
 	HAL_StatusTypeDef i2c_stts;
 	_Bool stts = false;
 
 	i2c_stts = HAL_I2C_Master_Transmit(&i2cHandler, DEV_ADD, &data, sizeof(data), HAL_MAX_DELAY);
 	if (i2c_stts == HAL_OK){
+
 		stts = true;
+
 	}
 	else{
 		i2cError_Handler(i2c_stts);
 	}
+
 	return(stts);
+
 }
 /**
  * @func   i2cError_Handler

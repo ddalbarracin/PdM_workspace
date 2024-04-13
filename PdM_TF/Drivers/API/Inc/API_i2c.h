@@ -3,8 +3,7 @@
  * @file    API_i2c.h
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	Header of API_i2c.c
+ * @brief   Header of API_i2c.c
  *
  ******************************************************************************
  **/
@@ -16,13 +15,12 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
-#include "API_Delay.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_nucleo_144.h"
 #include "stm32f4xx_hal_i2c.h"
 
 /* Private define ------------------------------------------------------------*/
 /* Definition for I2C resources */
-
 #define I2C1_INST						I2C1
 #define I2C1_CLK_FREC					100000
 #define I2C1_DUTY_CYCLE					I2C_DUTYCYCLE_2
@@ -33,9 +31,7 @@
 #define I2C1_GRAL_CALL_MODE				I2C_GENERALCALL_DISABLE
 #define I2C1_NOSTRETCH_Mode				I2C_NOSTRETCH_DISABLE
 
-
 /* Definition for GPIO Parameters */
-
 #define I2C1_SDA_PIN					GPIO_PIN_8
 #define I2C1_SCL_PIN					GPIO_PIN_9
 #define I2C1_GPIO_PORT					GPIOB
@@ -52,7 +48,7 @@
 
 /* Functions ------------------------------------------------------------------ */
 _Bool i2cInit(void);
-_Bool i2cDeInit(void);
+void i2cDeInit(void);
 _Bool i2cWrite(uint8_t);
 
 

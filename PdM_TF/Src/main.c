@@ -11,16 +11,14 @@
 
 /* Includes ------------------------------------------------------------------ */
 #include "main.h"
+#include "API_button.h"
 #include "API_lcd.h"
-#include "API_bmp.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
-/* UART handler declaration */
-UART_HandleTypeDef UartHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -51,57 +49,21 @@ int main(void) {
 	uint8_t size_leds = (uint8_t) (sizeof(leds) / sizeof(Led_TypeDef));
 	delay_t tick_led[size_leds];
 	uint8_t indx_led = 0;
-	uint8_t indx_btn = 0;
 	tick_t duty_led[SEQUENCY] = { PERIOD_100, PERIOD_200, PERIOD_300,
 	PERIOD_400, PERIOD_500, PERIOD_0 };
-	_Bool uart_stts = false;
-	_Bool rtc_stts = false;
-	_Bool lcd_stts = false;
-	_Bool bmp_stts = false;
 	tick_t *ptrduty = duty_led;
 
-	/* Initialize BUTTONs */
-	Button_t button[] = { BUTTON_UP, BUTTON_DOWN, BUTTON_ENTER, BUTTON_BACK};
-	//Button_t button[] = { BUTTON_UP };
-
-	uint8_t button_size = sizeof(button) / sizeof(Button_t);
-
-	for (indx_btn = 0; indx_btn < button_size; indx_btn++) {
-		PB_Init(button[indx_btn]);
-	}
-
-	/* Initialize UART Hardware */
-	if (uartInit()) {
-
-		uart_stts = true;
-
-	} else {
-		Error_Handler();
-	}
-	/* Initialize RTC */
-	if (rtcInit()){
-
-		rtc_stts = true;
-
-	}
 	/* Initialize Leds */
 	for (indx_led = 0; indx_led < size_leds; indx_led++) {
 		BSP_LED_Init(leds[indx_led]);
 		delayInit(&tick_led[indx_led], *ptrduty);
 	}
 
-	/* Initialize LCD1602 */
-	if(lcdInit()){
-		lcd_stts = true;
-	}
-	if(bmpInit()){
-		bmp_stts = true;
-	}
-	/* Initilize Button Debounce FSM */
-	debounceFSM_init();
-
 	/* Initilize System FSM */
 	lcdFSM_SysInit();
+
+	/* Initilize Button Debounce FSM */
+	debounceFSM_init();
 
 	/* Infinite loop */
 	while (1) {
@@ -116,41 +78,10 @@ int main(void) {
 		/* Update System  FSM */
 		lcdFSM_SysUpdate();
 
-
-		if (PB_Pressed(PB_STATE_FALL)==BUTTON_UP) {
-			ptrduty++;
-			if ((*ptrduty) == 0) {
-				ptrduty = duty_led;
-			}
-			for (indx_led = 0; indx_led < size_leds; indx_led++) {
-				delayInit(&tick_led[indx_led], *ptrduty);
-			}
-
-			if (uart_stts&&rtc_stts) {
-				uartSendStringSize((uint8_t*) USART_MSG_FALL, strlen((const char*) USART_MSG_FALL));
-			}
-			if (lcd_stts){
-				static const char lcd_uart[] = "BENJA CRACK\n\r";
-				uartSendStringSize((uint8_t*) lcd_uart, strlen((const char *) lcd_uart));
-			}
-			if(bmp_stts){
-				static const char spi_txt1[] = "SPI Initialized\n\r";
-				uartSendStringSize((uint8_t*) spi_txt1, strlen((const char *) spi_txt1));
-			}
-		}
-
-		/*if (PB_Pressed(PB_STATE_RISE)==BUTTON_DOWN) {
-			if (uart_stts&&rtc_stts) {
-				if (lcd_stts){
-					uartSendStringSize((uint8_t*) USART_MSG_RISE, strlen((const char*) USART_MSG_RISE));
-				}
-			}
-		}*/
 	}
+
 	return (0);
 }
-
-
 
 /**
  * @brief  System Clock Configuration

@@ -15,12 +15,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "API_rtc.h"
 #include "API_uart.h"
-#include "API_rtc.h"
-#include "API_button.h"
-#include "API_lcd.h"
-
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

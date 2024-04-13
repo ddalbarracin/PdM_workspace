@@ -9,12 +9,14 @@
  ******************************************************************************
  **/
 /* Includes ---------------------------------------------------------------- */
+#include <math.h>
+#include <stdlib.h>
 #include "API_lcd.h"
 #include "API_button.h"
 #include "API_cli.h"
 #include "API_bmp.h"
-#include "math.h"
-#include <stdlib.h>
+#include "API_lcd_port.h"
+
 
 /* Global Typedef ---------------------------------------------------------- */
 typedef enum {
@@ -42,6 +44,7 @@ static const char lcd_opt3_unit[] = " [hPa]";
 
 //static void lcdPrint(uint8_t *, uint8_t);
 void lcdClear(void);
+static void lcdPrint(uint8_t *, const uint8_t, uint8_t);
 static void lcdPrint_Menu1(void);
 static void lcdPrint_Menu2(void);
 static void lcdPrint_Menu3(void);
@@ -75,11 +78,11 @@ _Bool lcdInit(void){
  * @param  None
  * @retval bool_t
  */
-_Bool lcdDeInit(void){
+void lcdDeInit(void){
 
-	_Bool stts = false;
+	lcdPORT_DeInit();
 
-	return(stts);
+	return;
 }
 
 
@@ -90,10 +93,32 @@ _Bool lcdDeInit(void){
  * @retval None
  */
 void lcdFSM_SysInit(void){
-	LCDState = LCD_STATE_MENU1;
-	cliPrint((uint8_t *) uart_start, NULL, NULL);
-	lcdPrint_Menu1();
 
+	/* Initialize BUTTONs */
+	uint8_t indx_btn = 0;
+	Button_t button[] = { BUTTON_UP, BUTTON_DOWN, BUTTON_ENTER, BUTTON_BACK};
+	uint8_t button_size = sizeof(button) / sizeof(Button_t);
+
+	for (indx_btn = 0; indx_btn < button_size; indx_btn++) {
+
+		PB_Init(button[indx_btn]);
+
+	}
+
+	/* Initialize LCD1602 && BMP280 && CLI (UART and RTC) */
+	if(lcdInit() && bmpInit() && cliInit()){
+
+		LCDState = LCD_STATE_MENU1;
+		cliPrint((uint8_t *) uart_start, NULL, NULL);
+		lcdPrint_Menu1();
+
+	}else{
+
+		lcdError_Handler();
+
+	}
+
+	return;
 }
 
 /*
@@ -224,10 +249,11 @@ void lcdFSM_SysUpdate(void){
  * @param  None
  * @retval None
  */
-void lcdPrint(uint8_t *text, uint8_t line, uint8_t pos){
+static void lcdPrint(uint8_t *text, uint8_t line, uint8_t pos){
 
 	lcdPORT_Print(text, line, pos);
 
+	return;
 }
 
 /*
@@ -250,9 +276,9 @@ static void lcdPrint_Menu1(void){
 
 	lcdClear();
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_title, DDRAM_LH, 0);
+	lcdPrint((uint8_t *)lcd_title, LCD_PORT_DDRAM_LH, 0);
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_alt, DDRAM_LL, 0);
+	lcdPrint((uint8_t *)lcd_alt, LCD_PORT_DDRAM_LL, 0);
 	HAL_Delay(1);
 
 }
@@ -267,9 +293,9 @@ static void lcdPrint_Menu2(void){
 
 	lcdClear();
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_alt, DDRAM_LH, 0);
+	lcdPrint((uint8_t *)lcd_alt, LCD_PORT_DDRAM_LH, 0);
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_temp, DDRAM_LL, 0);
+	lcdPrint((uint8_t *)lcd_temp, LCD_PORT_DDRAM_LL, 0);
 	HAL_Delay(1);
 
 }
@@ -284,9 +310,9 @@ static void lcdPrint_Menu3(void){
 
 	lcdClear();
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_temp, DDRAM_LH, 0);
+	lcdPrint((uint8_t *)lcd_temp, LCD_PORT_DDRAM_LH, 0);
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_pres, DDRAM_LL, 0);
+	lcdPrint((uint8_t *)lcd_pres, LCD_PORT_DDRAM_LL, 0);
 	HAL_Delay(1);
 
 }
@@ -300,14 +326,14 @@ static void lcdPrint_Menu3(void){
 static void lcdPrint_Opt1(uint8_t * pmsr){
 
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_opt1, DDRAM_LH, 0);
+	lcdPrint((uint8_t *)lcd_opt1, LCD_PORT_DDRAM_LH, 0);
 	HAL_Delay(1);
 	if (pmsr != NULL){
-			lcdPrint(pmsr, DDRAM_LH, 4);
+			lcdPrint(pmsr, LCD_PORT_DDRAM_LH, 4);
 			cliPrint((uint8_t *) lcd_opt1, (uint8_t *) pmsr, (uint8_t *) lcd_opt1_unit);
 	}
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_opt1_unit, DDRAM_LH, 12);
+	lcdPrint((uint8_t *)lcd_opt1_unit, LCD_PORT_DDRAM_LH, 12);
 	HAL_Delay(1);
 
 }
@@ -321,14 +347,14 @@ static void lcdPrint_Opt1(uint8_t * pmsr){
 static void lcdPrint_Opt2(uint8_t *pmsr){
 
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_opt2, DDRAM_LH, 0);
+	lcdPrint((uint8_t *)lcd_opt2, LCD_PORT_DDRAM_LH, 0);
 	HAL_Delay(1);
 	if (pmsr != NULL){
-		lcdPrint(pmsr, DDRAM_LH, 5);
+		lcdPrint(pmsr, LCD_PORT_DDRAM_LH, 5);
 		cliPrint((uint8_t *) lcd_opt2, (uint8_t *) pmsr, (uint8_t *) uart_opt2_unit);
 	}
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_opt2_unit, DDRAM_LH, 12);
+	lcdPrint((uint8_t *)lcd_opt2_unit, LCD_PORT_DDRAM_LH, 12);
 	HAL_Delay(1);
 
 }
@@ -342,14 +368,14 @@ static void lcdPrint_Opt2(uint8_t *pmsr){
 static void lcdPrint_Opt3(uint8_t *pmsr){
 
 	lcdClear();
-	lcdPrint((uint8_t *)lcd_opt3, DDRAM_LH, 0);
+	lcdPrint((uint8_t *)lcd_opt3, LCD_PORT_DDRAM_LH, 0);
 	HAL_Delay(1);
 	if (pmsr != NULL){
-			lcdPrint(pmsr, DDRAM_LH, 5);
+			lcdPrint(pmsr, LCD_PORT_DDRAM_LH, 5);
 			cliPrint((uint8_t *) lcd_opt3, (uint8_t *) pmsr, (uint8_t *) lcd_opt3_unit);
 	}
 	HAL_Delay(1);
-	lcdPrint((uint8_t *)lcd_opt3_unit, DDRAM_LH, 10);
+	lcdPrint((uint8_t *)lcd_opt3_unit, LCD_PORT_DDRAM_LH, 10);
 	HAL_Delay(1);
 
 }

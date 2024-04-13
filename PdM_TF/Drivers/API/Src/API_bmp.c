@@ -1,10 +1,9 @@
 /**
  ******************************************************************************
- * @file    API_bmp_port.h
+ * @file    API_bmp.c
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	Header of API_bmp_port.c
+ * @brief   BMP User API
  *
  ******************************************************************************
  **/
@@ -12,27 +11,26 @@
 #include "API_bmp.h"
 #include "API_bmp_port.h"
 
-/* Global Variables -----------------------------------------------------------*/
-
-
 /* Declarate Functions ----------------------------------------------------------*/
 static void bmpError_Handler(void);
-
 
 /* Private Functions ----------------------------------------------------------*/
 /**
  * @func   bmpInit
- * @brief  Initialize bmp Device
+ * @brief  Initialize BMP Device
  * @param  None
- * @retval bool_t
+ * @retval _Bool
  */
 _Bool bmpInit(void){
 
 	_Bool stts = false;
 
 	stts = bmpPORT_Init();
+
 	if (stts == false){
+
 		bmpError_Handler();
+
 	}
 
 	return(stts);
@@ -40,34 +38,19 @@ _Bool bmpInit(void){
 
 /**
  * @func   bmpDeInit
- * @brief  Initialize bmp Device
+ * @brief  Initialize BMP Device
  * @param  None
- * @retval bool_t
+ * @retval _Bool
  */
-_Bool bmpDeInit(void){
+void bmpDeInit(void){
 
-	_Bool stts = false;
+	bmpPORT_DeInit();
 
-	stts = bmpPORT_DeInit();
-	if (stts == false){
-		bmpError_Handler();
-	}
+	return;
 
-	return(stts);
 }
 
-/**
- * @func   bmpGet_ID
- * @brief  Get Device ID
- * @param  None
- * @retval bool_t
- */
-uint8_t bmpGet_ID(void){
 
-	uint8_t bmpID;
-	bmpID = bmpPORT_GetID();
-	return(bmpID);
-}
 /**
  * @func   bmpGet_Temp
  * @brief  Read Temperature from bmp device
@@ -118,9 +101,9 @@ float bmpGet_Alt(void){
 
 /**
  * @func   bmpError_Handler
- * @brief  Catch Errors from bmp device
+ * @brief  Catch Errors from BMP device
  * @param  None
- * @retval uint32_t *
+ * @retval None
  */
 static void bmpError_Handler(void){
 	while(1){

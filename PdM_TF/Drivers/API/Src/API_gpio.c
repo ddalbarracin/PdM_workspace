@@ -1,18 +1,19 @@
 /**
  ******************************************************************************
- * @file    API/Inc/API_gpio.c
+ * @file    API_gpio.c
  * @author  Daniel David Albarracin
- * @brief   File to manage gipo hardware module
+ * @github  ddalbarracin
+ * @brief   File to manage GPIO hardware module
+ *
  ******************************************************************************
  */
 /* includes -----------------------------------------------------------------*/
 #include "API_gpio.h"
 
-
-/* Private Functions */
+/* Private Functions --------------------------------------------------------*/
 /*
  * @func   GPIO_Init
- * @brief  Init GPIO
+ * @brief  Initialize GPIO
  * @param  Button_st
  * @retval _Bool
  */
@@ -32,9 +33,11 @@ _Bool GPIO_Init(Button_st *ptr_button) {
 			GPIO_InitStruct.Pull = ptr_button->pull;
 			GPIO_InitStruct.Speed = ptr_button->speed;
 			HAL_GPIO_Init(ptr_button->port, &GPIO_InitStruct);
+
 		}
 		stts = true;
 	}
+
 	return (stts);
 
 }
@@ -55,13 +58,14 @@ GPIO_PinState GPIO_GetState(Button_st *ptr_button){
 	}
 
 	return(gpioState);
+
 }
 
 /*
  * @func   GPIO_DeInit
  * @brief  DeInit GPIOs
  * @param  Button_st
- * @retval None
+ * @retval _Bool
  */
 _Bool GPIO_DeInit(Button_st *ptr_button){
 
@@ -72,6 +76,9 @@ _Bool GPIO_DeInit(Button_st *ptr_button){
 		PButton_GPIO_PORT_CLK_DISABLE(ptr_button->port);
 		HAL_GPIO_DeInit(ptr_button->port, ptr_button->pin);
 		stts = true;
+
 	}
+
 	return(stts);
+
 }

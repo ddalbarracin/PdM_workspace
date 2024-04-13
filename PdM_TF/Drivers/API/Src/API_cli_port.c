@@ -3,26 +3,25 @@
  * @file    API_cli_port.c
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	This file controls cli port interface
+ * @brief   This file make an interface between cli and uart and rtc hardware
  *
  ******************************************************************************
  **/
-
 /* Includes ------------------------------------------------------------------ */
 #include "API_cli_port.h"
+#include "API_uart.h"
+#include "API_rtc.h"
 
 /* Private Prototype Functions -------------------------------------------------------- */
 static void cliPORT_Error_Handler(void);
 static void cliPORT_Get_Date(uint8_t []);
 static void cliPORT_Get_Time(uint8_t []);
-//static void cliPORT_Data_Format(uint8_t *);
 
 
 /* Functions -------------------------------------------------------- */
 /*
  * @func   cliPORT_Init
- * @brief
+ * @brief  Initialize CLI Port
  * @param  None
  * @retval _Bool
  */
@@ -30,18 +29,37 @@ _Bool cliPORT_Init(void){
 
 	_Bool stts = false;
 
+	if(rtcInit()){
+
+		if (uartInit()){
+
+			stts = true;
+
+		}
+	}
+
 	return(stts);
+
 }
 
 /*
  * @func   cliPORT_DeInit
- * @brief
+ * @brief  DeInitialize CLI Port
  * @param  None
  * @retval _Bool
  */
 _Bool cliPORT_DeInit(void){
 
 	_Bool stts = false;
+
+	if(rtcDeInit()){
+
+		if(uartDeInit()){
+
+			stts = true;
+
+		}
+	}
 
 	return(stts);
 
@@ -62,9 +80,9 @@ _Bool cliPORT_Clear(void){
 
 /*
  * @func   cliPORT_Print
- * @brief
- * @param  None
- * @retval _Bool
+ * @brief  Print message to UART
+ * @param  uint8_t*
+ * @retval None
  */
 void cliPORT_Print(uint8_t *text){
 
@@ -80,12 +98,19 @@ void cliPORT_Print(uint8_t *text){
 	cliPORT_Get_Time(hour);
 
 	strcpy((char *) timestamp, MSG_UART_TSTAMP_START);
+
 	for (int indx = 0; indx < sizeof(date); indx ++){
+
 		timestamp[indx +1] = date[indx];
+
 	}
+
 	strcat((char *) timestamp, " ");
+
 	for (int indx = 0; indx < sizeof(hour); indx ++){
+
 			timestamp[indx + 10] = hour[indx];
+
 	}
 
 	strcat((char *) timestamp, MSG_UART_TSTAMP_END);
@@ -100,8 +125,8 @@ void cliPORT_Print(uint8_t *text){
 
 /*
  * @func   cliPORT_Get_Date
- * @brief
- * @param  None
+ * @brief  Get Date from RTC
+ * @param  uint8_t*
  * @retval None
  */
 static void cliPORT_Get_Date(uint8_t *date){
@@ -128,16 +153,20 @@ static void cliPORT_Get_Date(uint8_t *date){
 		date[5] = '/';
 		date[6] = '0' + anio[1];
 		date[7] = '0' + anio[0];
+
 	}else{
+
 		cliPORT_Error_Handler();
+
 	}
+
 	return;
 }
 
 /*
  * @func   cliPORT_Get_Time
- * @brief
- * @param  None
+ * @brief  Get Time from RTC
+ * @param  uint8_t*
  * @retval None
  */
 static void cliPORT_Get_Time(uint8_t *hour){
@@ -168,9 +197,13 @@ static void cliPORT_Get_Time(uint8_t *hour){
 		hour[5] = ':';
 		hour[6] = '0' + seg[1];
 		hour[7] = '0' + seg[0];
+
 	}else{
+
 		cliPORT_Error_Handler();
+
 	}
+
 	return;
 }
 

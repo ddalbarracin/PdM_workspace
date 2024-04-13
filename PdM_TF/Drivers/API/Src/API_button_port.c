@@ -1,8 +1,10 @@
 /**
  ******************************************************************************
- * @file    API/Inc/API_button_port.c
+ * @file    API_button_port.c
  * @author  Daniel David Albarracin
- * @brief   File to Access to Hardware by API_gio.c
+ * @github  ddalbarracin
+ * @brief   This file make an interface between Button and GPIO Hardware
+ *
  ******************************************************************************
  */
 /* includes  -----------------------------------------------------------------*/
@@ -10,12 +12,12 @@
 #include "API_gpio.h"
 
 /* Global Variables ------------------------------------------------------------------------*/
-static Button_st ptrButton[4];
+static Button_st ptrButton[PB_PORT_QTY];
+
 /* Private Prototype Functions ------------------------------------------------------------ */
 static void btnPortError_Handler(_Bool);
 
 /* Functions ------------------------------------------------------------ ------------------*/
-
 /*
  * @func   PB_PORT_Init
  * @brief
@@ -28,42 +30,53 @@ _Bool PB_PORT_Init(uint8_t button){
 	Button_st btn;
 
 	btn.index = button;
-	btn.mode = PButton_MODE;
-	btn.pull = PButton_PULL;
-	btn.speed = PButton_SPEED;
+	btn.mode = PB_PORT_MODE;
+	btn.pull = PB_PORT_PULL;
+	btn.speed = PB_PORT_SPEED;
 
 	if (button == BUTTON_UP) {
-		btn.pin = PButton_UP_PIN;
-		btn.port = PButton_UP_PORT;
+		btn.pin = PB_PORT_UP_PIN;
+		btn.port = PB_PORT_UP_PORT;
 	}
 	if (button == BUTTON_DOWN) {
-		btn.pin = PButton_DOWN_PIN;
-		btn.port = PButton_DOWN_PORT;
+
+		btn.pin = PB_PORT_DOWN_PIN;
+		btn.port = PB_PORT_DOWN_PORT;
+
 	}
 	if (button == BUTTON_ENTER) {
-		btn.pin = PButton_ENTER_PIN;
-		btn.port = PButton_ENTER_PORT;
+
+		btn.pin = PB_PORT_ENTER_PIN;
+		btn.port = PB_PORT_ENTER_PORT;
+
 	}
 	if (button == BUTTON_BACK) {
-		btn.pin = PButton_BACK_PIN;
-		btn.port = PButton_BACK_PORT;
+
+		btn.pin = PB_PORT_BACK_PIN;
+		btn.port = PB_PORT_BACK_PORT;
+
 	}
 
 	stts = GPIO_Init(&btn);
 	if (stts != true){
+
 		btnPortError_Handler(stts);
 
 	}else{
+
 		ptrButton[button] = btn;
+
 	}
+
 	return(stts);
+
 }
 
 /*
  * @func   PB_PORT_GetState
- * @brief  Press Button event
+ * @brief  Get State of Button
  * @param  uint8_t
- * @retval _Bool
+ * @retval GPIO_PinState
  */
 GPIO_PinState PB_PORT_GetState(uint8_t button){
 
@@ -72,11 +85,12 @@ GPIO_PinState PB_PORT_GetState(uint8_t button){
 	pbStatus = GPIO_GetState(&ptrButton[button]);
 
 	return(pbStatus);
+
 }
 
 /*
  * @func   PB_PORT_DeInit
- * @brief  Press Button event
+ * @brief  DeInitialize button
  * @param  uint8_t
  * @retval _Bool
  */
@@ -86,33 +100,44 @@ _Bool PB_PORT_DeInit(uint8_t button){
 	Button_st btn;
 
 	btn.index = button;
-	btn.mode = PButton_MODE;
-	btn.pull = PButton_PULL;
-	btn.speed = PButton_SPEED;
+	btn.mode = PB_PORT_MODE;
+	btn.pull = PB_PORT_PULL;
+	btn.speed = PB_PORT_SPEED;
 
 	if (button == BUTTON_UP) {
-		btn.pin = PButton_UP_PIN;
-		btn.port = PButton_UP_PORT;
+
+		btn.pin = PB_PORT_UP_PIN;
+		btn.port = PB_PORT_UP_PORT;
+
 	}
 	if (button == BUTTON_DOWN) {
-		btn.pin = PButton_DOWN_PIN;
-		btn.port = PButton_DOWN_PORT;
+
+		btn.pin = PB_PORT_DOWN_PIN;
+		btn.port = PB_PORT_DOWN_PORT;
+
 	}
 	if (button == BUTTON_ENTER) {
-		btn.pin = PButton_ENTER_PIN;
-		btn.port = PButton_ENTER_PORT;
+		btn.pin = PB_PORT_ENTER_PIN;
+		btn.port = PB_PORT_ENTER_PORT;
+
 	}
 	if (button == BUTTON_BACK) {
-		btn.pin = PButton_BACK_PIN;
-		btn.port = PButton_BACK_PORT;
+
+		btn.pin = PB_PORT_BACK_PIN;
+		btn.port = PB_PORT_BACK_PORT;
+
 	}
 
 	stts = GPIO_DeInit(&btn);
+
 	if (stts != true){
+
 		btnPortError_Handler(stts);
 
 	}
+
 	return(stts);
+
 }
 
 /*

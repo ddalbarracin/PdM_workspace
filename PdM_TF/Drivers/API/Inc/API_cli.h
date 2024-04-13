@@ -3,8 +3,7 @@
  * @file    API_cli.h
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	Header of API_cli.c
+ * @brief   Header of API_cli.c
  *
  ******************************************************************************
  **/
@@ -17,8 +16,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "API_cli_port.h"
-
 
 
 /* Prototype Functions -------------------------------------------------------- */

@@ -3,8 +3,7 @@
  * @file    API_cli_port.h
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
- * @brief   PdM - Final Work
- * 		 	Header of API_cli_port.c
+ * @brief   Header of API_cli_port.c
  *
  ******************************************************************************
  **/
@@ -17,9 +16,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "API_uart.h"
-#include "API_rtc.h"
 
+/* Defines ------------------------------------------------------------------- */
 #define LSB_NIBBLE_MASK			0x0F
 #define MSB_NIBBLE_MASK			0xF0
 #define NIBBLE_SHIFT			4
