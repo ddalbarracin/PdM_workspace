@@ -7,25 +7,25 @@
  *
  ******************************************************************************
  **/
-/* Includes -------------------------------------------------------------------*/
+/* Includes -----------------------------------------------------------------*/
 #include "API_rtc.h"
 #include "stm32f4xx_hal_rtc.h"
 #include "stm32f4xx_hal_rcc.h"
 #include "stm32f4xx_hal_pwr.h"
 
-/* Global Variables -----------------------------------------------------------*/
+/* Global Variables ---------------------------------------------------------*/
 static RTC_HandleTypeDef rtcHandler;
 volatile time_t rtc_Current_Time;
 volatile date_t rtc_Current_Date;
 
-/* Private Functions ----------------------------------------------------------*/
+/* Private Functions --------------------------------------------------------*/
 static void rtcError_Handler(HAL_StatusTypeDef);
 static void rtcMspInit(RTC_HandleTypeDef*);
 static void rtcMspDeInit(void);
 static _Bool rtcSetTime(void);
 static _Bool rtcSetDate(void);
 
-/* Private Functions ----------------------------------------------------------*/
+/* Private Functions --------------------------------------------------------*/
 /**
  * @func   rtcInit
  * @brief  Initialize RTC Hardware Module
@@ -50,7 +50,7 @@ _Bool rtcInit(void) {
 
 	if (rtc_stts == HAL_OK) {
 
-		if((rtcSetDate())&&(rtcSetTime())){
+		if ((rtcSetDate()) && (rtcSetTime())) {
 
 			stts = true;
 
@@ -71,7 +71,7 @@ _Bool rtcInit(void) {
  * @param  None
  * @retval _Bool
  */
-_Bool rtcDeInit(void){
+_Bool rtcDeInit(void) {
 
 	HAL_StatusTypeDef rtc_stts;
 	_Bool stts = false;
@@ -83,7 +83,7 @@ _Bool rtcDeInit(void){
 
 		stts = true;
 
-	}else {
+	} else {
 
 		rtcError_Handler(rtc_stts);
 
@@ -104,7 +104,8 @@ static void rtcMspInit(RTC_HandleTypeDef *hrtc) {
 	RCC_OscInitTypeDef RCC_OscInitStruct;
 	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
 
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_LSE;
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI
+			| RCC_OSCILLATORTYPE_LSE;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
 	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
 	RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
@@ -141,7 +142,7 @@ static void rtcMspInit(RTC_HandleTypeDef *hrtc) {
  * @param  RTC_HandleTypeDef *
  * @retval None
  */
-static void rtcMspDeInit(void){
+static void rtcMspDeInit(void) {
 
 	/* Disable RTC Clock */
 	HAL_PWR_DisableBkUpAccess();
@@ -166,20 +167,19 @@ time_t rtcGetTime(void) {
 	rtc_stts = HAL_RTC_GetTime(&rtcHandler, &rtcTime, RTC_FORMAT_BCD);
 	rtc_stts = HAL_RTC_GetDate(&rtcHandler, &rtcDate, RTC_FORMAT_BCD);
 
-	if (rtc_stts == HAL_OK){
+	if (rtc_stts == HAL_OK) {
 
 		rtc_Current_Time.hour = rtcTime.Hours;
 		rtc_Current_Time.minute = rtcTime.Minutes;
 		rtc_Current_Time.second = rtcTime.Seconds;
 
-	}
-	else{
+	} else {
 
 		rtcError_Handler(rtc_stts);
 
 	}
 
-	return(rtc_Current_Time);
+	return (rtc_Current_Time);
 
 }
 
@@ -189,7 +189,7 @@ time_t rtcGetTime(void) {
  * @param  None
  * @retval bool_t
  */
-_Bool rtcSetTime(void){
+_Bool rtcSetTime(void) {
 
 	HAL_StatusTypeDef rtc_stts;
 	RTC_TimeTypeDef rtcTime;
@@ -204,17 +204,16 @@ _Bool rtcSetTime(void){
 
 	rtc_stts = HAL_RTC_SetTime(&rtcHandler, &rtcTime, RTC_FORMAT_BCD);
 
-	if (rtc_stts == HAL_OK){
+	if (rtc_stts == HAL_OK) {
 
 		stts = true;
 
-	}
-	else{
+	} else {
 
 		rtcError_Handler(rtc_stts);
 	}
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -233,20 +232,19 @@ date_t rtcGetDate(void) {
 	rtc_stts = HAL_RTC_GetTime(&rtcHandler, &rtcTime, RTC_FORMAT_BCD);
 	rtc_stts = HAL_RTC_GetDate(&rtcHandler, &rtcDate, RTC_FORMAT_BCD);
 
-	if (rtc_stts == HAL_OK){
+	if (rtc_stts == HAL_OK) {
 
 		rtc_Current_Date.date = rtcDate.Date;
 		rtc_Current_Date.month = rtcDate.Month;
 		rtc_Current_Date.year = rtcDate.Year;
 
-	}
-	else{
+	} else {
 
 		rtcError_Handler(rtc_stts);
 
 	}
 
-	return(rtc_Current_Date);
+	return (rtc_Current_Date);
 
 }
 
@@ -269,18 +267,17 @@ _Bool rtcSetDate(void) {
 
 	rtc_stts = HAL_RTC_SetDate(&rtcHandler, &rtcDate, RTC_FORMAT_BCD);
 
-	if (rtc_stts == HAL_OK){
+	if (rtc_stts == HAL_OK) {
 
 		stts = true;
 
-	}
-	else{
+	} else {
 
 		rtcError_Handler(rtc_stts);
 
 	}
 
-	return(stts);
+	return (stts);
 
 }
 

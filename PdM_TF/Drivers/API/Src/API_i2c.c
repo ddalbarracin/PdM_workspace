@@ -15,7 +15,7 @@
 static I2C_HandleTypeDef i2cHandler;
 
 /* Declarate Functions ----------------------------------------------------------*/
-static void i2cMspInit(I2C_HandleTypeDef *);
+static void i2cMspInit(I2C_HandleTypeDef*);
 static void i2cError_Handler(HAL_StatusTypeDef);
 static void i2cMspDeInit(void);
 
@@ -26,7 +26,7 @@ static void i2cMspDeInit(void);
  * @param  None
  * @retval bool_t
  */
-_Bool i2cInit(void){
+_Bool i2cInit(void) {
 
 	HAL_StatusTypeDef i2c_stts;
 	_Bool stts = false;
@@ -44,10 +44,9 @@ _Bool i2cInit(void){
 	i2cMspInit(&i2cHandler);
 
 	i2c_stts = HAL_I2C_Init(&i2cHandler);
-	if(i2c_stts == HAL_OK){
+	if (i2c_stts == HAL_OK) {
 		stts = true;
-	}
-	else{
+	} else {
 		i2cError_Handler(i2c_stts);
 	}
 
@@ -60,7 +59,7 @@ _Bool i2cInit(void){
  * @param  None
  * @retval None
  */
-void i2cDeInit(void){
+void i2cDeInit(void) {
 
 	i2cMspDeInit();
 
@@ -73,7 +72,7 @@ void i2cDeInit(void){
  * @param  None
  * @retval bool_t
  */
-static void i2cMspInit(I2C_HandleTypeDef *hi2c){
+static void i2cMspInit(I2C_HandleTypeDef *hi2c) {
 
 	GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -103,7 +102,7 @@ static void i2cMspInit(I2C_HandleTypeDef *hi2c){
  * @param  None
  * @retval None
  */
-static void i2cMspDeInit(void){
+static void i2cMspDeInit(void) {
 
 	/* Disable clock for GPIO Port F */
 	I2C1_GPIO_CLK_DISABLE();
@@ -121,22 +120,22 @@ static void i2cMspDeInit(void){
  * @param  None
  * @retval None
  */
-_Bool i2cWrite(uint8_t data){
+_Bool i2cWrite(uint8_t data) {
 
 	HAL_StatusTypeDef i2c_stts;
 	_Bool stts = false;
 
-	i2c_stts = HAL_I2C_Master_Transmit(&i2cHandler, DEV_ADD, &data, sizeof(data), HAL_MAX_DELAY);
-	if (i2c_stts == HAL_OK){
+	i2c_stts = HAL_I2C_Master_Transmit(&i2cHandler, DEV_ADD, &data,
+			sizeof(data), HAL_MAX_DELAY);
+	if (i2c_stts == HAL_OK) {
 
 		stts = true;
 
-	}
-	else{
+	} else {
 		i2cError_Handler(i2c_stts);
 	}
 
-	return(stts);
+	return (stts);
 
 }
 /**
@@ -145,8 +144,8 @@ _Bool i2cWrite(uint8_t data){
  * @param  None
  * @retval bool_t
  */
-static void i2cError_Handler(HAL_StatusTypeDef eHandler){
-	while(1){
+static void i2cError_Handler(HAL_StatusTypeDef eHandler) {
+	while (1) {
 
 	}
 }

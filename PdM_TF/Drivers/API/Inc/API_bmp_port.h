@@ -7,20 +7,20 @@
  *
  ******************************************************************************
  **/
-/* Includes guard ------------------------------------------------------------- */
+/* Includes guard -----------------------------------------------------------*/
 #ifndef API_BMP_PORT
 #define API_BMP_PORT
 
-/* Includes ------------------------------------------------------------------ */
+/* Includes -----------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
 
-/* Private defines ------------------------------------------------------------*/
+/* Private defines ----------------------------------------------------------*/
 /* Definition for BMP resources */
-/* Registers ------------------------------------------------------------------*/
+/* Registers ----------------------------------------------------------------*/
 #define BMP_REG_ID					0xD0	// ID Register
 #define BMP_REG_RST					0xE0	// Reset Register
 #define BMP_REG_STTS				0xF3	// Status Register
@@ -40,11 +40,10 @@
 #define BMP_REG_CAL_INIT			0x88	// Calibration Register Init
 #define BMP_REG_CAL_LENGTH			24		// Calibration Register Length
 
-
-/* Commands --------------------------------------------------------------------*/
+/* Commands -----------------------------------------------------------------*/
 #define BMP_SW_RST					0xB6	// Software Reset
 
-/* Parameters ------------------------------------------------------------------*/
+/* Parameters ---------------------------------------------------------------*/
 #define BMP_PARAM_ID				0x58	// BMP Device ID
 
 /* DataSheet Table 7:
@@ -67,13 +66,12 @@
 #define BMP_SET_PRESS_REF_SMPL		100		// 100 samples of pressure averaged by IIR
 #define BMP_SET_PRESS_REF_DELAY		16		// 500 [us] per sample * 16 samples of IIR * 2 of guard = 16 [ms]
 
-/* Prototype Declaration Functions -------------------------------------------------------------------*/
+/* Prototype Declaration Functions ------------------------------------------*/
 _Bool bmpPORT_Init(void);
 void bmpPORT_DeInit(void);
 uint8_t bmpPORT_GetID(void);
 float bmpPORT_Get_Temp(void);
 float bmpPORT_Get_Press(void);
 float bmpPORT_Get_Alt(void);
-
 
 #endif /* API_BMP_PORT */

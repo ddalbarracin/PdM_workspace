@@ -27,12 +27,12 @@ static void lcdPrint_FirstWrite(void);
  * @param  None
  * @retval None
  */
-_Bool lcdPORT_Init(void){
+_Bool lcdPORT_Init(void) {
 
 	_Bool stts = true;
 
 	stts = i2cInit();
-	if (stts == true){
+	if (stts == true) {
 
 		lcdPORT_Delay(LCD_PORT_DELAY50);
 		lcdPORT_Ctrl_Cmnd(LCD_PORT_FUNCT_8B);
@@ -64,7 +64,7 @@ _Bool lcdPORT_Init(void){
 
 	}
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -74,7 +74,7 @@ _Bool lcdPORT_Init(void){
  * @param  None
  * @retval None
  */
-void lcdPORT_DeInit(void){
+void lcdPORT_DeInit(void) {
 
 	i2cDeInit();
 
@@ -88,15 +88,15 @@ void lcdPORT_DeInit(void){
  * @param  None
  * @retval None
  */
-static void lcdPrint_FirstWrite(void){
+static void lcdPrint_FirstWrite(void) {
 
 	static const char lcd_blank[] = "             ";
 
 	lcdPORT_Ctrl_Cmnd(LCD_PORT_CLEAR);
 	lcdPORT_Ctrl_Cmnd(LCD_PORT_CLEAR);
-	lcdPORT_Print((uint8_t *)lcd_blank, LCD_PORT_DDRAM_LH, 3);
+	lcdPORT_Print((uint8_t*) lcd_blank, LCD_PORT_DDRAM_LH, 3);
 	HAL_Delay(1);
-	lcdPORT_Print((uint8_t *)lcd_blank, LCD_PORT_DDRAM_LL, 3);
+	lcdPORT_Print((uint8_t*) lcd_blank, LCD_PORT_DDRAM_LL, 3);
 	HAL_Delay(1);
 	lcdPORT_Ctrl_Cmnd(LCD_PORT_CLEAR);
 
@@ -110,12 +110,13 @@ static void lcdPrint_FirstWrite(void){
  * @param  None
  * @retval None
  */
-void lcdPORT_Clear(void){
+void lcdPORT_Clear(void) {
 
 	lcdPORT_Ctrl_Cmnd(LCD_PORT_CLEAR);
 	lcdPORT_Delay(LCD_PORT_DELAY5);
 
 	return;
+
 }
 
 /*
@@ -124,14 +125,16 @@ void lcdPORT_Clear(void){
  * @param  uint8_t*, uint8_t, uint8_t
  * @retval None
  */
-void lcdPORT_Print(uint8_t *texto, uint8_t line, uint8_t position){
+void lcdPORT_Print(uint8_t *texto, uint8_t line, uint8_t position) {
 
 	lcdPORT_Ctrl_Cmnd(LCD_PORT_RETURN_HOME);
 	lcdPORT_Line_Pos(line, position);
 
-	while(*texto)lcdPORT_Data_Cmnd(*texto++);
+	while (*texto)
+		lcdPORT_Data_Cmnd(*texto++);
 
 	return;
+
 }
 
 /*
@@ -140,7 +143,7 @@ void lcdPORT_Print(uint8_t *texto, uint8_t line, uint8_t position){
  * @param  uint8_t
  * @retval None
  */
-static void lcdPORT_Data_Cmnd(uint8_t data){
+static void lcdPORT_Data_Cmnd(uint8_t data) {
 
 	lcdPORT_Send_Byte(data, LCD_PORT_DATOS);
 
@@ -154,7 +157,7 @@ static void lcdPORT_Data_Cmnd(uint8_t data){
  * @param  uint8_t
  * @retval None
  */
-static void lcdPORT_Ctrl_Cmnd(uint8_t data){
+static void lcdPORT_Ctrl_Cmnd(uint8_t data) {
 
 	lcdPORT_Send_Byte(data, LCD_PORT_CONTROL);
 
@@ -168,7 +171,7 @@ static void lcdPORT_Ctrl_Cmnd(uint8_t data){
  * @param  uint8_t, uint8_t
  * @retval None
  */
-static void lcdPORT_Send_Byte(uint8_t data, uint8_t type){
+static void lcdPORT_Send_Byte(uint8_t data, uint8_t type) {
 
 	uint8_t high = data & LCD_PORT_NIBBLE_MSB;
 	uint8_t low = (data << LCD_PORT_NIBBLE_LSB) & LCD_PORT_NIBBLE_MSB;
@@ -184,22 +187,23 @@ static void lcdPORT_Send_Byte(uint8_t data, uint8_t type){
  * @param  uint8_t, uint8_t
  * @retval None
  */
-static void lcdPORT_Send_Nibble(uint8_t data, uint8_t type){
+static void lcdPORT_Send_Nibble(uint8_t data, uint8_t type) {
 
 	_Bool stts;
-	uint8_t fdata  = ((data) | (type) | (LCD_PORT_ENABLE) | (LCD_PORT_BACK_LIGHT_ON));
+	uint8_t fdata = ((data) | (type) | (LCD_PORT_ENABLE)
+			| (LCD_PORT_BACK_LIGHT_ON));
 	uint8_t sdata = ((data) | (type) | (LCD_PORT_BACK_LIGHT_ON));
 
 	stts = i2cWrite(fdata);
-	if (stts == true){
+	if (stts == true) {
 		lcdPORT_Delay(LCD_PORT_DELAY2);
-	}else{
+	} else {
 		lcdPORT_Error_Handler();
 	}
 	stts = i2cWrite(sdata);
-	if (stts == true){
+	if (stts == true) {
 		lcdPORT_Delay(LCD_PORT_DELAY2);
-	}else{
+	} else {
 		lcdPORT_Error_Handler();
 	}
 
@@ -213,24 +217,24 @@ static void lcdPORT_Send_Nibble(uint8_t data, uint8_t type){
  * @param  uint8_t, uint8_t
  * @retval None
  */
-static void lcdPORT_Line_Pos(uint8_t line, uint8_t position){
+static void lcdPORT_Line_Pos(uint8_t line, uint8_t position) {
 
 	uint8_t charPos;
 
-	if ((line == LCD_PORT_DDRAM_LH)||(line == LCD_PORT_DDRAM_LL)){
+	if ((line == LCD_PORT_DDRAM_LH) || (line == LCD_PORT_DDRAM_LL)) {
 
-		if ((position>=0) && (position<= 15)){
+		if ((position >= LCD_PORT_CURSOR_START)
+				&& (position <= LCD_PORT_CURSOR_END)) {
 
-			charPos = position+line;
+			charPos = position + line;
 			lcdPORT_Ctrl_Cmnd(charPos);
 
-		}else{
+		} else {
 
 			lcdPORT_Error_Handler();
 
 		}
-	}
-	else{
+	} else {
 
 		lcdPORT_Error_Handler();
 
@@ -246,7 +250,7 @@ static void lcdPORT_Line_Pos(uint8_t line, uint8_t position){
  * @param  uint8_t
  * @retval None
  */
-static void lcdPORT_Delay(uint8_t delay){
+static void lcdPORT_Delay(uint8_t delay) {
 
 	HAL_Delay(delay);
 
@@ -259,8 +263,8 @@ static void lcdPORT_Delay(uint8_t delay){
  * @param  None
  * @retval None
  */
-static void lcdPORT_Error_Handler(void){
-	while(1){
+static void lcdPORT_Error_Handler(void) {
+	while (1) {
 
 	}
 }

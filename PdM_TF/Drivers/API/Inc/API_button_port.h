@@ -7,11 +7,11 @@
  *
  ******************************************************************************
  */
-/* includes  guard-----------------------------------------------------------------*/
+/* includes  guard-----------------------------------------------------------*/
 #ifndef API_BUTTON_PORT
 #define API_BUTTON_PORT
 
-/* includes  -----------------------------------------------------------------*/
+/* includes  ----------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -34,7 +34,7 @@
 
 #define PB_PORT_QTY						4
 
-/* Typedef  -----------------------------------------------------------------*/
+/* Typedef  ----------------------------------------------------------------*/
 typedef struct {
 	uint8_t index;
 	uint32_t pin;
@@ -42,20 +42,19 @@ typedef struct {
 	uint32_t pull;
 	uint32_t speed;
 	GPIO_TypeDef *port;
-}Button_st;
+} Button_st;
 
-typedef enum{
+typedef enum {
 	BUTTON_UP = 0,
 	BUTTON_DOWN = 1,
 	BUTTON_ENTER = 2,
 	BUTTON_BACK = 3,
 	BUTTON_NONE = 4,
-}Button_t;
+} Button_t;
 
-/* Functions  -----------------------------------------------------------------*/
+/* Functions  -------------------------------------------------------------*/
 _Bool PB_PORT_Init(uint8_t button);
 _Bool PB_PORT_DeInit(uint8_t button);
 GPIO_PinState PB_PORT_GetState(uint8_t button);
-
 
 #endif /* API_BUTTON_PORT */

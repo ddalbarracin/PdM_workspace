@@ -7,38 +7,37 @@
  *
  ******************************************************************************
  **/
-/* Includes ------------------------------------------------------------------ */
+/* Includes -----------------------------------------------------------------*/
 #include "API_cli_port.h"
 #include "API_uart.h"
 #include "API_rtc.h"
 
-/* Private Prototype Functions -------------------------------------------------------- */
+/* Private Prototype Functions ----------------------------------------------*/
 static void cliPORT_Error_Handler(void);
-static void cliPORT_Get_Date(uint8_t []);
-static void cliPORT_Get_Time(uint8_t []);
+static void cliPORT_Get_Date(uint8_t[]);
+static void cliPORT_Get_Time(uint8_t[]);
 
-
-/* Functions -------------------------------------------------------- */
+/* Functions ----------------------------------------------------------------*/
 /*
  * @func   cliPORT_Init
  * @brief  Initialize CLI Port
  * @param  None
  * @retval _Bool
  */
-_Bool cliPORT_Init(void){
+_Bool cliPORT_Init(void) {
 
 	_Bool stts = false;
 
-	if(rtcInit()){
+	if (rtcInit()) {
 
-		if (uartInit()){
+		if (uartInit()) {
 
 			stts = true;
 
 		}
 	}
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -48,20 +47,20 @@ _Bool cliPORT_Init(void){
  * @param  None
  * @retval _Bool
  */
-_Bool cliPORT_DeInit(void){
+_Bool cliPORT_DeInit(void) {
 
 	_Bool stts = false;
 
-	if(rtcDeInit()){
+	if (rtcDeInit()) {
 
-		if(uartDeInit()){
+		if (uartDeInit()) {
 
 			stts = true;
 
 		}
 	}
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -71,11 +70,12 @@ _Bool cliPORT_DeInit(void){
  * @param  None
  * @retval _Bool
  */
-_Bool cliPORT_Clear(void){
+void cliPORT_Clear(void) {
 
-	_Bool stts = false;
+	uartSendStringSize((uint8_t*) MSG_UART_CLEAR,
+			strlen((const char*) MSG_UART_CLEAR));
 
-	return(stts);
+	return;
 }
 
 /*
@@ -84,7 +84,7 @@ _Bool cliPORT_Clear(void){
  * @param  uint8_t*
  * @retval None
  */
-void cliPORT_Print(uint8_t *text){
+void cliPORT_Print(uint8_t *text) {
 
 	uint8_t timestamp[80];
 	uint8_t hour[8];
@@ -97,25 +97,25 @@ void cliPORT_Print(uint8_t *text){
 	cliPORT_Get_Date(date);
 	cliPORT_Get_Time(hour);
 
-	strcpy((char *) timestamp, MSG_UART_TSTAMP_START);
+	strcpy((char*) timestamp, MSG_UART_TSTAMP_START);
 
-	for (int indx = 0; indx < sizeof(date); indx ++){
+	for (int indx = 0; indx < sizeof(date); indx++) {
 
-		timestamp[indx +1] = date[indx];
-
-	}
-
-	strcat((char *) timestamp, " ");
-
-	for (int indx = 0; indx < sizeof(hour); indx ++){
-
-			timestamp[indx + 10] = hour[indx];
+		timestamp[indx + 1] = date[indx];
 
 	}
 
-	strcat((char *) timestamp, MSG_UART_TSTAMP_END);
-	strcat((char *) timestamp, (char *) text);
-	strcat((char *) timestamp, (char *) MSG_UART_END);
+	strcat((char*) timestamp, " ");
+
+	for (int indx = 0; indx < sizeof(hour); indx++) {
+
+		timestamp[indx + 10] = hour[indx];
+
+	}
+
+	strcat((char*) timestamp, MSG_UART_TSTAMP_END);
+	strcat((char*) timestamp, (char*) text);
+	strcat((char*) timestamp, (char*) MSG_UART_END);
 
 	uartSendStringSize((uint8_t*) timestamp, strlen((const char*) timestamp));
 
@@ -129,14 +129,14 @@ void cliPORT_Print(uint8_t *text){
  * @param  uint8_t*
  * @retval None
  */
-static void cliPORT_Get_Date(uint8_t *date){
+static void cliPORT_Get_Date(uint8_t *date) {
 
-	volatile date_t rtc_Date = {0};
+	volatile date_t rtc_Date = { 0 };
 	volatile uint8_t dia[2], mes[2], anio[2];
 
 	rtc_Date = rtcGetDate();
 
-	if ((rtc_Date.date > 0)&&(rtc_Date.date <= 31)){
+	if ((rtc_Date.date > 0) && (rtc_Date.date <= 31)) {
 
 		dia[1] = ((rtc_Date.date & MSB_NIBBLE_MASK) >> NIBBLE_SHIFT);
 		dia[0] = (rtc_Date.date & LSB_NIBBLE_MASK);
@@ -154,7 +154,7 @@ static void cliPORT_Get_Date(uint8_t *date){
 		date[6] = '0' + anio[1];
 		date[7] = '0' + anio[0];
 
-	}else{
+	} else {
 
 		cliPORT_Error_Handler();
 
@@ -169,9 +169,9 @@ static void cliPORT_Get_Date(uint8_t *date){
  * @param  uint8_t*
  * @retval None
  */
-static void cliPORT_Get_Time(uint8_t *hour){
+static void cliPORT_Get_Time(uint8_t *hour) {
 
-	time_t rtc_Time = { .hour = 0, .minute = 0, .second = 0};
+	time_t rtc_Time = { .hour = 0, .minute = 0, .second = 0 };
 	uint8_t hora[2], min[2], seg[2];
 
 	memset(hora, '\0', sizeof(hora));
@@ -180,7 +180,7 @@ static void cliPORT_Get_Time(uint8_t *hour){
 
 	rtc_Time = rtcGetTime();
 
-	if ((rtc_Time.hour >= 0) && (rtc_Time.hour <= 24)){
+	if ((rtc_Time.hour >= 0) && (rtc_Time.hour <= 24)) {
 
 		hora[1] = ((rtc_Time.hour & MSB_NIBBLE_MASK) >> NIBBLE_SHIFT);
 		hora[0] = (rtc_Time.hour & LSB_NIBBLE_MASK);
@@ -198,7 +198,7 @@ static void cliPORT_Get_Time(uint8_t *hour){
 		hour[6] = '0' + seg[1];
 		hour[7] = '0' + seg[0];
 
-	}else{
+	} else {
 
 		cliPORT_Error_Handler();
 
@@ -213,8 +213,8 @@ static void cliPORT_Get_Time(uint8_t *hour){
  * @param  None
  * @retval None
  */
-static void cliPORT_Error_Handler(void){
-	while(1){
+static void cliPORT_Error_Handler(void) {
+	while (1) {
 
 	}
 

@@ -7,33 +7,33 @@
  *
  ******************************************************************************
  **/
-/* Includes ------------------------------------------------------------------ */
+/* Includes -----------------------------------------------------------------*/
 #include "API_bmp.h"
 #include "API_bmp_port.h"
 
-/* Declarate Functions ----------------------------------------------------------*/
+/* Declarate Functions ------------------------------------------------------*/
 static void bmpError_Handler(void);
 
-/* Private Functions ----------------------------------------------------------*/
+/* Private Functions --------------------------------------------------------*/
 /**
  * @func   bmpInit
  * @brief  Initialize BMP Device
  * @param  None
  * @retval _Bool
  */
-_Bool bmpInit(void){
+_Bool bmpInit(void) {
 
 	_Bool stts = false;
 
 	stts = bmpPORT_Init();
 
-	if (stts == false){
+	if (stts == false) {
 
 		bmpError_Handler();
 
 	}
 
-	return(stts);
+	return (stts);
 }
 
 /**
@@ -42,7 +42,7 @@ _Bool bmpInit(void){
  * @param  None
  * @retval _Bool
  */
-void bmpDeInit(void){
+void bmpDeInit(void) {
 
 	bmpPORT_DeInit();
 
@@ -50,20 +50,19 @@ void bmpDeInit(void){
 
 }
 
-
 /**
  * @func   bmpGet_Temp
  * @brief  Read Temperature from bmp device
  * @param  None
  * @retval float
  */
-float bmpGet_Temp(void){
+float bmpGet_Temp(void) {
 
 	float temp = 0;
 
 	temp = bmpPORT_Get_Temp();
 
-	return(temp);
+	return (temp);
 
 }
 
@@ -73,13 +72,13 @@ float bmpGet_Temp(void){
  * @param  None
  * @retval float
  */
-float bmpGet_Press(void){
+float bmpGet_Press(void) {
 
 	float press = 0;
 
 	press = bmpPORT_Get_Press();
 
-	return(press);
+	return (press);
 
 }
 
@@ -89,13 +88,13 @@ float bmpGet_Press(void){
  * @param  None
  * @retval float
  */
-float bmpGet_Alt(void){
+float bmpGet_Alt(void) {
 
 	float alt = 0;
 
 	alt = bmpPORT_Get_Alt();
 
-	return(alt);
+	return (alt);
 
 }
 
@@ -105,8 +104,8 @@ float bmpGet_Alt(void){
  * @param  None
  * @retval None
  */
-static void bmpError_Handler(void){
-	while(1){
+static void bmpError_Handler(void) {
+	while (1) {
 
 	}
 

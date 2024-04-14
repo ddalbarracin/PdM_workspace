@@ -62,6 +62,7 @@
 #define USART_MSG_AUTHOR					"Author: Daniel David Albarracin\n\r"
 #define USART_MSG_GIT						"github: @ddalbarracin\n\r"
 #define USART_MSG_SEP						"------------------------------------------------------------\n\r"
+#define USART_MSG_CLEAR						"\033[2J"
 
 /* Generic Defines  ----------------------------------------------------------*/
 #define MEM_CLR								'\0'

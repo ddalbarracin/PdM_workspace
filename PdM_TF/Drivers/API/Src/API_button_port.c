@@ -7,24 +7,24 @@
  *
  ******************************************************************************
  */
-/* includes  -----------------------------------------------------------------*/
+/* includes  ----------------------------------------------------------------*/
 #include "API_button_port.h"
 #include "API_gpio.h"
 
-/* Global Variables ------------------------------------------------------------------------*/
+/* Global Variables ---------------------------------------------------------*/
 static Button_st ptrButton[PB_PORT_QTY];
 
-/* Private Prototype Functions ------------------------------------------------------------ */
+/* Private Prototype Functions ----------------------------------------------*/
 static void btnPortError_Handler(_Bool);
 
-/* Functions ------------------------------------------------------------ ------------------*/
+/* Functions ----------------------------------------------------------------*/
 /*
  * @func   PB_PORT_Init
  * @brief
  * @param  uint8_t
  * @retval _Bool
  */
-_Bool PB_PORT_Init(uint8_t button){
+_Bool PB_PORT_Init(uint8_t button) {
 
 	_Bool stts = false;
 	Button_st btn;
@@ -58,17 +58,17 @@ _Bool PB_PORT_Init(uint8_t button){
 	}
 
 	stts = GPIO_Init(&btn);
-	if (stts != true){
+	if (stts != true) {
 
 		btnPortError_Handler(stts);
 
-	}else{
+	} else {
 
 		ptrButton[button] = btn;
 
 	}
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -78,13 +78,13 @@ _Bool PB_PORT_Init(uint8_t button){
  * @param  uint8_t
  * @retval GPIO_PinState
  */
-GPIO_PinState PB_PORT_GetState(uint8_t button){
+GPIO_PinState PB_PORT_GetState(uint8_t button) {
 
 	GPIO_PinState pbStatus;
 
 	pbStatus = GPIO_GetState(&ptrButton[button]);
 
-	return(pbStatus);
+	return (pbStatus);
 
 }
 
@@ -94,7 +94,7 @@ GPIO_PinState PB_PORT_GetState(uint8_t button){
  * @param  uint8_t
  * @retval _Bool
  */
-_Bool PB_PORT_DeInit(uint8_t button){
+_Bool PB_PORT_DeInit(uint8_t button) {
 
 	_Bool stts = false;
 	Button_st btn;
@@ -130,13 +130,13 @@ _Bool PB_PORT_DeInit(uint8_t button){
 
 	stts = GPIO_DeInit(&btn);
 
-	if (stts != true){
+	if (stts != true) {
 
 		btnPortError_Handler(stts);
 
 	}
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -146,8 +146,8 @@ _Bool PB_PORT_DeInit(uint8_t button){
  * @param  _Bool
  * @retval None
  */
-static void btnPortError_Handler(_Bool){
-	while(1){
+static void btnPortError_Handler(_Bool) {
+	while (1) {
 
 	}
 }

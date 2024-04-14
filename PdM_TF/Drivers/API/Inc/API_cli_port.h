@@ -24,11 +24,12 @@
 #define MSG_UART_END			"\n\r"
 #define MSG_UART_TSTAMP_START	"["
 #define MSG_UART_TSTAMP_END		"]:"
+#define MSG_UART_CLEAR			"\033[2J"
 
 /* Prototype Functions -------------------------------------------------------- */
 _Bool cliPORT_Init(void);
 _Bool cliPORT_DeInit(void);
-_Bool cliPORT_Clear(void);
+void cliPORT_Clear(void);
 void cliPORT_Print(uint8_t *);
 
 #endif /* API_CLI_PORT */

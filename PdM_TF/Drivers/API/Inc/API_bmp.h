@@ -7,23 +7,21 @@
  *
  ******************************************************************************
  **/
-/* Includes guard ------------------------------------------------------------- */
+/* Includes guard -----------------------------------------------------------*/
 #ifndef API_BMP
 #define API_BMP
 
-/* Includes ------------------------------------------------------------------ */
+/* Includes -----------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-
-/* Functions ------------------------------------------------------------------ */
+/* Functions ----------------------------------------------------------------*/
 _Bool bmpInit(void);
 void bmpDeInit(void);
 float bmpGet_Temp(void);
 float bmpGet_Press(void);
 float bmpGet_Alt(void);
-
 
 #endif /* API_BMP */

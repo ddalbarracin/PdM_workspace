@@ -7,10 +7,10 @@
  *
  ******************************************************************************
  **/
-/* Private functions --------------------------------------------------------- */
+/* Private functions --------------------------------------------------------*/
 #include "API_Delay.h"
 
-/* Priavete Declarate functions ---------------------------------------------- */
+/* Priavete Declarate functions ---------------------------------------------*/
 static void delayError_Handler(void);
 
 /**
@@ -29,8 +29,7 @@ void delayInit(delay_t *delay, tick_t duration) {
 			delay->running = false;
 
 		}
-	}
-	else{
+	} else {
 
 		delayError_Handler();
 
@@ -70,8 +69,7 @@ bool_t delayRead(delay_t *delay) {
 
 		}
 
-	}
-	else{
+	} else {
 
 		delayError_Handler();
 
@@ -96,8 +94,7 @@ void delayWrite(delay_t *delay, tick_t duration) {
 
 		}
 
-	}
-	else{
+	} else {
 
 		delayError_Handler();
 
@@ -112,8 +109,8 @@ void delayWrite(delay_t *delay, tick_t duration) {
  * @param  None
  * @retval None
  */
-static void delayError_Handler(void){
-	while(1){
+static void delayError_Handler(void) {
+	while (1) {
 
 	}
 }

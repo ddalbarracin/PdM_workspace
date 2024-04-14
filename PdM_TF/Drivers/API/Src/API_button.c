@@ -26,24 +26,23 @@ static void buttonReleased(Button_t);
  * @param  button_t
  * @retval _Bool
  */
-_Bool PB_Init(Button_t button){
+_Bool PB_Init(Button_t button) {
 
 	_Bool stts = false;
 
 	stts = PB_PORT_Init(button);
 
-	if (stts == true){
+	if (stts == true) {
 
 		btnState[button].index = button;
 
-	}
-	else{
+	} else {
 
 		btnError_Handler(stts);
 
 	}
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -53,13 +52,13 @@ _Bool PB_Init(Button_t button){
  * @param  Button_t
  * @retval uint8_t
  */
-static uint8_t PB_GetState(Button_t button){
+static uint8_t PB_GetState(Button_t button) {
 
 	uint8_t pb_stts;
 
 	pb_stts = PB_PORT_GetState(button);
 
-	return(pb_stts);
+	return (pb_stts);
 
 }
 
@@ -100,11 +99,11 @@ static void buttonReleased(Button_t button) {
 void debounceFSM_init(void) {
 
 	uint8_t btn_indx;
-	uint8_t btn_count = sizeof(btnState)/sizeof(btnFSM_State);
+	uint8_t btn_count = sizeof(btnState) / sizeof(btnFSM_State);
 
 	for (btn_indx = 0; btn_indx < btn_count; btn_indx++) {
 
-			btnState[btn_indx].state = PB_STATE_UP;
+		btnState[btn_indx].state = PB_STATE_UP;
 
 	}
 
@@ -120,7 +119,7 @@ void debounceFSM_init(void) {
 void debounceFSM_update(void) {
 
 	uint8_t indx_btn;
-	uint8_t count = sizeof(btnState)/sizeof(btnFSM_State);
+	uint8_t count = sizeof(btnState) / sizeof(btnFSM_State);
 
 	for (indx_btn = 0; indx_btn < count; indx_btn++) {
 
@@ -200,18 +199,18 @@ Button_t PB_Pressed(uint8_t state) {
 	uint8_t btnP_count = 0;
 	uint8_t btnR_count = 0;
 	Button_t btn_stts = BUTTON_NONE;
-	uint8_t count = sizeof(btnState)/sizeof(btnFSM_State);
+	uint8_t count = sizeof(btnState) / sizeof(btnFSM_State);
 
 	if (state == PB_STATE_FALL) {
 
-		for (btn_indx = 0; btn_indx < count; btn_indx ++){
+		for (btn_indx = 0; btn_indx < count; btn_indx++) {
 
 			if (btnState[btn_indx].btnPress.PB_PRESSED == PRESSED) {
 
-				btnP_count ++;
+				btnP_count++;
 				btnState[btn_indx].btnPress.PB_PRESSED = NOT_PRESSED;
 
-				if (btnP_count){
+				if (btnP_count) {
 
 					btnP_name = btnState[btn_indx].index;
 
@@ -222,14 +221,14 @@ Button_t PB_Pressed(uint8_t state) {
 	}
 	if (state == PB_STATE_RISE) {
 
-		for (btn_indx = 0; btn_indx < count; btn_indx ++){
+		for (btn_indx = 0; btn_indx < count; btn_indx++) {
 
 			if (btnState[btn_indx].btnPress.PB_RELEASE == RELEASE) {
 
-				btnR_count ++;
+				btnR_count++;
 				btnState[btn_indx].btnPress.PB_RELEASE = NOT_RELEASE;
 
-				if (btnR_count){
+				if (btnR_count) {
 
 					btnR_name = btnState[btn_indx].index;
 
@@ -259,8 +258,8 @@ Button_t PB_Pressed(uint8_t state) {
  * @param  _Bool
  * @retval None
  */
-static void btnError_Handler(_Bool stts){
-	while(1){
+static void btnError_Handler(_Bool stts) {
+	while (1) {
 
 	}
 }

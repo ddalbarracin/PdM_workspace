@@ -4,8 +4,12 @@
  * @author  Daniel David Albarracin
  * @github  ddalbarracin
  * @brief   CESE - FIUBA 2024 - PdM - PCSE - Final Work
- *
- * @date
+ *			Control System to get temperature, pressure and Altitude.
+ *			This system is integrated for a BMP280 device using SPI Protocol,
+ *			a LCD1602 Display using I2C protocol, an User Interface of four
+ *			push buttons by GPIOs and a data logger by uart that used date
+ *			and time from RTC to make a timestamp.
+ * @date    14/04/2024
  ******************************************************************************
  **/
 
@@ -18,7 +22,6 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -41,23 +44,12 @@ int main(void) {
 	 */
 	HAL_Init();
 
-	/* Configure the system clock to 180 MHz */
+	/* Configure the system clock to 180 MHz
+	 * and APB1 Clock to 45 MHz. */
 	SystemClock_Config();
 
-	/* Variables */
-	Led_TypeDef leds[] = { LED_GREEN, LED_BLUE, LED_RED };
-	uint8_t size_leds = (uint8_t) (sizeof(leds) / sizeof(Led_TypeDef));
-	delay_t tick_led[size_leds];
-	uint8_t indx_led = 0;
-	tick_t duty_led[SEQUENCY] = { PERIOD_100, PERIOD_200, PERIOD_300,
-	PERIOD_400, PERIOD_500, PERIOD_0 };
-	tick_t *ptrduty = duty_led;
-
 	/* Initialize Leds */
-	for (indx_led = 0; indx_led < size_leds; indx_led++) {
-		BSP_LED_Init(leds[indx_led]);
-		delayInit(&tick_led[indx_led], *ptrduty);
-	}
+	BSP_LED_Init(LED_GREEN);
 
 	/* Initilize System FSM */
 	lcdFSM_SysInit();
@@ -67,11 +59,7 @@ int main(void) {
 
 	/* Infinite loop */
 	while (1) {
-		for (indx_led = 0; indx_led < size_leds; indx_led++) {
-			if (delayRead(&tick_led[indx_led])) {
-				BSP_LED_Toggle(leds[indx_led]);
-			}
-		}
+
 		/* Update Button Debounce FSM */
 		debounceFSM_update();
 

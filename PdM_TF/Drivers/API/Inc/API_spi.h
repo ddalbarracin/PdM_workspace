@@ -71,5 +71,4 @@ uint8_t spiREGRead(uint8_t);
 void spiREGWrite(uint8_t, uint8_t);
 void spiBULKRead(uint8_t, uint8_t*, uint8_t);
 
-
 #endif /* API_SPI */

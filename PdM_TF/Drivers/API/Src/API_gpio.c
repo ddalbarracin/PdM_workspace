@@ -48,16 +48,16 @@ _Bool GPIO_Init(Button_st *ptr_button) {
  * @param  Button_st
  * @retval GPIO_PinState
  */
-GPIO_PinState GPIO_GetState(Button_st *ptr_button){
+GPIO_PinState GPIO_GetState(Button_st *ptr_button) {
 
 	GPIO_PinState gpioState;
 
-	if (ptr_button != NULL){
+	if (ptr_button != NULL) {
 
 		gpioState = HAL_GPIO_ReadPin(ptr_button->port, ptr_button->pin);
 	}
 
-	return(gpioState);
+	return (gpioState);
 
 }
 
@@ -67,7 +67,7 @@ GPIO_PinState GPIO_GetState(Button_st *ptr_button){
  * @param  Button_st
  * @retval _Bool
  */
-_Bool GPIO_DeInit(Button_st *ptr_button){
+_Bool GPIO_DeInit(Button_st *ptr_button) {
 
 	_Bool stts = false;
 
@@ -79,6 +79,6 @@ _Bool GPIO_DeInit(Button_st *ptr_button){
 
 	}
 
-	return(stts);
+	return (stts);
 
 }

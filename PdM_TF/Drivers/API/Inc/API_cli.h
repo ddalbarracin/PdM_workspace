@@ -7,22 +7,20 @@
  *
  ******************************************************************************
  **/
-/* Includes guard ------------------------------------------------------------- */
+/* Includes guard -----------------------------------------------------------*/
 #ifndef API_CLI
 #define API_CLI
 
-/* Includes ------------------------------------------------------------------ */
+/* Includes -----------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-
-/* Prototype Functions -------------------------------------------------------- */
+/* Prototype Functions ------------------------------------------------------*/
 _Bool cliInit(void);
 _Bool cliDeInit(void);
-_Bool cliClear(void);
+void cliClear(void);
 void cliPrint(uint8_t*, uint8_t*, uint8_t*);
-
 
 #endif /* API_CLI */

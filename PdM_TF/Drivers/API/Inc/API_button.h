@@ -19,10 +19,9 @@
 
 /* Typedef -------------------------------------------------------------------*/
 
-typedef enum{
-	BUTTON_PRESSED,
-	BUTTON_RELEASE
-}ButtonSate_t;
+typedef enum {
+	BUTTON_PRESSED, BUTTON_RELEASE
+} ButtonSate_t;
 
 typedef enum {
 	PB_STATE_UP, PB_STATE_FALL, PB_STATE_DOWN, PB_STATE_RISE,
@@ -31,14 +30,14 @@ typedef enum {
 typedef struct {
 	uint8_t PB_PRESSED;
 	uint8_t PB_RELEASE;
-}btnFSM_Press;
+} btnFSM_Press;
 
-typedef struct{
+typedef struct {
 	uint8_t index;
 	debounceState_t state;
 	delay_t delay;
 	btnFSM_Press btnPress;
-}btnFSM_State;
+} btnFSM_State;
 
 /* Private define ------------------------------------------------------------*/
 #define UPTOFALL 			40
@@ -54,6 +53,5 @@ _Bool PB_Init(Button_t);
 Button_t PB_Pressed(uint8_t);
 void debounceFSM_init(void);
 void debounceFSM_update(void);
-
 
 #endif /* API_BUTTON */

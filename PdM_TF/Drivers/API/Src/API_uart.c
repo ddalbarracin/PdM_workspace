@@ -162,6 +162,10 @@ static void uartInitMessage(void) {
 	ptrstring = (uint8_t*) msg;
 
 	memset(msg, MEM_CLR, sizeof(msg));
+	strcpy(msg, USART_MSG_CLEAR);
+	uartSendString(ptrstring);
+
+	memset(msg, MEM_CLR, sizeof(msg));
 	strcpy(msg, USART_MSG_SEP);
 	uartSendString(ptrstring);
 

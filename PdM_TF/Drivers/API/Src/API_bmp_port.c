@@ -28,10 +28,10 @@ static int32_t bmp280_compensate_T_int32(int32_t adc_T);
 static uint32_t bmp280_compensate_P_int64(int32_t adc_P);
 
 /* Typedef Definitions --------------------------------------------------------*/
-typedef struct{
+typedef struct {
 	uint16_t dig_T1;
-	int16_t  dig_T2;
-	int16_t  dig_T3;
+	int16_t dig_T2;
+	int16_t dig_T3;
 	uint16_t dig_P1;
 	int16_t dig_P2;
 	int16_t dig_P3;
@@ -41,13 +41,13 @@ typedef struct{
 	int16_t dig_P7;
 	int16_t dig_P8;
 	int16_t dig_P9;
-}bmpCompP_t;
+} bmpCompP_t;
 
-typedef struct{
+typedef struct {
 	float temp;
 	float press;
 	float alt;
-}bmpMsrmt_t;
+} bmpMsrmt_t;
 
 /* Global Variables ----------------------------------------------------------*/
 static bmpMsrmt_t measr;
@@ -62,22 +62,22 @@ static int32_t temp_fine = 0;
  * @param  None
  * @retval _Bool
  */
-_Bool bmpPORT_Init(void){
+_Bool bmpPORT_Init(void) {
 
 	_Bool stts = false;
 
 	stts = spiInit();
 
-	if (stts == true){
+	if (stts == true) {
 
 		stts = bmpPORT_BMP_Config();
 
-	}else{
+	} else {
 
 		bmpPORT_Error_Handler();
 	}
 
-	return(stts);
+	return (stts);
 }
 
 /**
@@ -86,7 +86,7 @@ _Bool bmpPORT_Init(void){
  * @param  None
  * @retval _Bool
  */
-void bmpPORT_DeInit(void){
+void bmpPORT_DeInit(void) {
 
 	spiDeInit();
 
@@ -100,13 +100,13 @@ void bmpPORT_DeInit(void){
  * @param  None
  * @retval uint8_t
  */
-uint8_t bmpPORT_GetID(void){
+uint8_t bmpPORT_GetID(void) {
 
 	uint8_t bmpID;
 
 	bmpID = spiREGRead(BMP_REG_ID);
 
-	return(bmpID);
+	return (bmpID);
 
 }
 /**
@@ -115,19 +115,18 @@ uint8_t bmpPORT_GetID(void){
  * @param  None
  * @retval float
  */
-float bmpPORT_Get_Temp(void){
+float bmpPORT_Get_Temp(void) {
 
 	int32_t msrdTemp;
 	uint8_t tempBuf[BMP_REG_TEMP_QTY];
-
 
 	spiBULKRead(BMP_REG_TEMP_MSB, tempBuf, BMP_REG_TEMP_QTY);
 
 	msrdTemp = ((tempBuf[0] << 12) | (tempBuf[1] << 4) | (tempBuf[2] >> 4));
 
-	measr.temp = (float)(bmp280_compensate_T_int32(msrdTemp)/100.0);
+	measr.temp = (float) (bmp280_compensate_T_int32(msrdTemp) / 100.0);
 
-	return(measr.temp);
+	return (measr.temp);
 
 }
 /**
@@ -136,7 +135,7 @@ float bmpPORT_Get_Temp(void){
  * @param  None
  * @retval float
  */
-float bmpPORT_Get_Press(void){
+float bmpPORT_Get_Press(void) {
 
 	int32_t msrdPress;
 	uint8_t pressBuf[BMP_REG_PRESS_QTY];
@@ -145,9 +144,9 @@ float bmpPORT_Get_Press(void){
 
 	msrdPress = ((pressBuf[0] << 12) | (pressBuf[1] << 4) | (pressBuf[2] >> 4));
 
-	measr.press = (float)(bmp280_compensate_P_int64(msrdPress)/256.0);
+	measr.press = (float) (bmp280_compensate_P_int64(msrdPress) / 256.0);
 
-	return(measr.press);
+	return (measr.press);
 
 }
 
@@ -157,28 +156,28 @@ float bmpPORT_Get_Press(void){
  * @param  None
  * @retval float
  */
-float bmpPORT_Get_Alt(void){
+float bmpPORT_Get_Alt(void) {
 
 	int32_t msrdAlt;
 	float msrdPress;
 
-	if (refPress != 0){
+	if (refPress != 0) {
 
-		if(measr.press != 0){
+		if (measr.press != 0) {
 
 			msrdPress = measr.press;
 
-		}else{
+		} else {
 
 			msrdPress = bmpPORT_Get_Press();
 
 		}
 
-		msrdAlt = (float)(1.0 - pow(msrdPress / refPress, 0.1903)) * 4433076.0;
+		msrdAlt = (float) (1.0 - pow(msrdPress / refPress, 0.1903)) * 4433076.0;
 		measr.alt = msrdAlt;
 	}
 
-	return(measr.alt);
+	return (measr.alt);
 
 }
 
@@ -188,28 +187,28 @@ float bmpPORT_Get_Alt(void){
  * @param  None
  * @retval _Bool
  */
-static _Bool bmpPORT_BMP_Config(void){
+static _Bool bmpPORT_BMP_Config(void) {
 
 	uint8_t bmpID;
 	_Bool cnfg_stts = false;
 
 	bmpID = bmpPORT_GetID();
 
-	if (bmpID == BMP_PARAM_ID){
+	if (bmpID == BMP_PARAM_ID) {
 
 		cnfg_stts = true;
 
-	}else{
+	} else {
 
 		bmpPORT_Set_Reset();
 		bmpPORT_Delay(BMP_RST_DELAY);
 		bmpID = bmpPORT_GetID();
 
-		if (bmpID == BMP_PARAM_ID){
+		if (bmpID == BMP_PARAM_ID) {
 
 			cnfg_stts = true;
 
-		}else{
+		} else {
 
 			bmpPORT_Error_Handler();
 
@@ -217,7 +216,7 @@ static _Bool bmpPORT_BMP_Config(void){
 
 	}
 
-	if (cnfg_stts == true){
+	if (cnfg_stts == true) {
 
 		bmpPORT_Set_OSPress();
 		bmpPORT_Set_OSTemp();
@@ -229,7 +228,7 @@ static _Bool bmpPORT_BMP_Config(void){
 
 	}
 
-	return(cnfg_stts);
+	return (cnfg_stts);
 
 }
 
@@ -239,7 +238,7 @@ static _Bool bmpPORT_BMP_Config(void){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Set_OSPress(void){
+static void bmpPORT_Set_OSPress(void) {
 
 	uint8_t msrmnt_reg;
 
@@ -258,7 +257,7 @@ static void bmpPORT_Set_OSPress(void){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Set_OSTemp(void){
+static void bmpPORT_Set_OSTemp(void) {
 
 	uint8_t msrmnt_reg;
 
@@ -277,7 +276,7 @@ static void bmpPORT_Set_OSTemp(void){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Set_PWRMode(void){
+static void bmpPORT_Set_PWRMode(void) {
 
 	uint8_t msrmnt_reg;
 
@@ -296,7 +295,7 @@ static void bmpPORT_Set_PWRMode(void){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Set_IIRCnfg(void){
+static void bmpPORT_Set_IIRCnfg(void) {
 
 	int8_t cnfg_reg;
 
@@ -315,7 +314,7 @@ static void bmpPORT_Set_IIRCnfg(void){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Set_StandBy(void){
+static void bmpPORT_Set_StandBy(void) {
 
 	int8_t cnfg_reg;
 
@@ -334,7 +333,7 @@ static void bmpPORT_Set_StandBy(void){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Set_Reset(void){
+static void bmpPORT_Set_Reset(void) {
 
 	spiREGWrite(BMP_REG_RST, BMP_SW_RST);
 
@@ -348,25 +347,25 @@ static void bmpPORT_Set_Reset(void){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Get_CompParam(void){
+static void bmpPORT_Get_CompParam(void) {
 
 	uint8_t cmpBuffer[BMP_REG_CAL_LENGTH];
 
 	spiBULKRead(BMP_REG_CAL_INIT, cmpBuffer, BMP_REG_CAL_LENGTH);
 
-	compParams.dig_T1 = (cmpBuffer[1]<<8 | cmpBuffer[0]);
-	compParams.dig_T2 = (cmpBuffer[3]<<8 | cmpBuffer[2]);
-	compParams.dig_T3 = (cmpBuffer[5]<<8 | cmpBuffer[4]);
+	compParams.dig_T1 = (cmpBuffer[1] << 8 | cmpBuffer[0]);
+	compParams.dig_T2 = (cmpBuffer[3] << 8 | cmpBuffer[2]);
+	compParams.dig_T3 = (cmpBuffer[5] << 8 | cmpBuffer[4]);
 
-	compParams.dig_P1 = (cmpBuffer[7]<<8 | cmpBuffer[6]);
-	compParams.dig_P2 = (cmpBuffer[9]<<8 | cmpBuffer[8]);
-	compParams.dig_P3 = (cmpBuffer[11]<<8 | cmpBuffer[10]);
-	compParams.dig_P4 = (cmpBuffer[13]<<8 | cmpBuffer[12]);
-	compParams.dig_P5 = (cmpBuffer[15]<<8 | cmpBuffer[14]);
-	compParams.dig_P6 = (cmpBuffer[17]<<8 | cmpBuffer[16]);
-	compParams.dig_P7 = (cmpBuffer[19]<<8 | cmpBuffer[18]);
-	compParams.dig_P8 = (cmpBuffer[21]<<8 | cmpBuffer[20]);
-	compParams.dig_P9 = (cmpBuffer[23]<<8 | cmpBuffer[22]);
+	compParams.dig_P1 = (cmpBuffer[7] << 8 | cmpBuffer[6]);
+	compParams.dig_P2 = (cmpBuffer[9] << 8 | cmpBuffer[8]);
+	compParams.dig_P3 = (cmpBuffer[11] << 8 | cmpBuffer[10]);
+	compParams.dig_P4 = (cmpBuffer[13] << 8 | cmpBuffer[12]);
+	compParams.dig_P5 = (cmpBuffer[15] << 8 | cmpBuffer[14]);
+	compParams.dig_P6 = (cmpBuffer[17] << 8 | cmpBuffer[16]);
+	compParams.dig_P7 = (cmpBuffer[19] << 8 | cmpBuffer[18]);
+	compParams.dig_P8 = (cmpBuffer[21] << 8 | cmpBuffer[20]);
+	compParams.dig_P9 = (cmpBuffer[23] << 8 | cmpBuffer[22]);
 
 	return;
 
@@ -378,19 +377,19 @@ static void bmpPORT_Get_CompParam(void){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Set_Ref(void){
+static void bmpPORT_Set_Ref(void) {
 
 	float avrg = 0;
 	uint8_t indx;
 
-	for(indx = 0; indx < BMP_SET_PRESS_REF_SMPL; indx ++){
+	for (indx = 0; indx < BMP_SET_PRESS_REF_SMPL; indx++) {
 
 		avrg += bmpPORT_Get_Press();
 		bmpPORT_Delay(BMP_SET_PRESS_REF_DELAY);
 
 	}
 
-	refPress = (avrg/BMP_SET_PRESS_REF_SMPL);
+	refPress = (avrg / BMP_SET_PRESS_REF_SMPL);
 
 	return;
 
@@ -406,7 +405,7 @@ static void bmpPORT_Set_Ref(void){
  * @retval int32_t
  * @author Bosch Sensortec GmbH
  */
-static int32_t bmp280_compensate_T_int32(int32_t msrdTemp){
+static int32_t bmp280_compensate_T_int32(int32_t msrdTemp) {
 
 	int32_t var1, var2, Temp;
 
@@ -420,7 +419,7 @@ static int32_t bmp280_compensate_T_int32(int32_t msrdTemp){
 
 	Temp = (temp_fine * 5 + 128) >> 8;
 
-	return(Temp);
+	return (Temp);
 
 }
 
@@ -435,27 +434,29 @@ static int32_t bmp280_compensate_T_int32(int32_t msrdTemp){
  * @retval uint32_t
  * @author Bosch Sensortec GmbH
  */
-static uint32_t bmp280_compensate_P_int64(int32_t msrdPress){
+static uint32_t bmp280_compensate_P_int64(int32_t msrdPress) {
 
 	int32_t var1, var2, Press;
 
-	var1 = ((int64_t)(temp_fine)) - 128000;
-	var2 = var1 * var1 * (int64_t)compParams.dig_P6;
-	var2 = var2 + ((var1 * (int64_t)compParams.dig_P5) << 17);
-	var2 = var2 + (((int64_t)compParams.dig_P4) << 35);
-	var1 = ((var1 * var1 * (int64_t)compParams.dig_P3) >> 8) + ((var1 * (int64_t)compParams.dig_P2) << 12);
-	var1 = (((((int64_t)1) << 47)+var1)) * ((int64_t)compParams.dig_P1) >> 33;
-	if (var1 == 0)
-	{
+	var1 = ((int64_t) (temp_fine)) - 128000;
+	var2 = var1 * var1 * (int64_t) compParams.dig_P6;
+	var2 = var2 + ((var1 * (int64_t) compParams.dig_P5) << 17);
+	var2 = var2 + (((int64_t) compParams.dig_P4) << 35);
+	var1 = ((var1 * var1 * (int64_t) compParams.dig_P3) >> 8)
+			+ ((var1 * (int64_t) compParams.dig_P2) << 12);
+	var1 = (((((int64_t) 1) << 47) + var1)) * ((int64_t) compParams.dig_P1)
+			>> 33;
+	if (var1 == 0) {
 		return 0; // avoid exception caused by division by zero
 	}
 	Press = 1048576 - msrdPress;
 	Press = (((Press << 31) - var2) * 3125) / var1;
-	var1 = (((int64_t)compParams.dig_P9) * (Press >> 13) * (Press >> 13)) >> 25;
-	var2 = (((int64_t)compParams.dig_P8) * Press) >> 19;
-	Press = ((Press + var1 + var2) >> 8) + (((int64_t)compParams.dig_P7) << 4);
+	var1 = (((int64_t) compParams.dig_P9) * (Press >> 13) * (Press >> 13))
+			>> 25;
+	var2 = (((int64_t) compParams.dig_P8) * Press) >> 19;
+	Press = ((Press + var1 + var2) >> 8) + (((int64_t) compParams.dig_P7) << 4);
 
-	return ((uint32_t)Press);
+	return ((uint32_t) Press);
 
 }
 
@@ -465,7 +466,7 @@ static uint32_t bmp280_compensate_P_int64(int32_t msrdPress){
  * @param  uint32_t
  * @retval none
  */
-static void bmpPORT_Delay(uint32_t delay){
+static void bmpPORT_Delay(uint32_t delay) {
 
 	HAL_Delay(delay);
 
@@ -479,8 +480,8 @@ static void bmpPORT_Delay(uint32_t delay){
  * @param  None
  * @retval None
  */
-static void bmpPORT_Error_Handler(void){
-	while(1){
+static void bmpPORT_Error_Handler(void) {
+	while (1) {
 
 	}
 

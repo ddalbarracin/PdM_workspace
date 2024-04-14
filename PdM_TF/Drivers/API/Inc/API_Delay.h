@@ -7,10 +7,10 @@
  *
  ******************************************************************************
  */
-/* include guard -------------------------------------------------------------*/
+/* include guard ------------------------------------------------------------*/
 #ifndef API_DELAY
 #define API_DELAY
-/* Includes ------------------------------------------------------------------*/
+/* Includes -----------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <stdint.h>
@@ -18,7 +18,7 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_nucleo_144.h"
 
-/* Typedef  ------------------------------------------------------------------*/
+/* Typedef  -----------------------------------------------------------------*/
 typedef uint32_t tick_t;
 typedef _Bool bool_t;
 
@@ -28,7 +28,7 @@ typedef struct {
 	bool_t running;
 } delay_t;
 
-/* Exported constants --------------------------------------------------------*/
+/* Exported constants -------------------------------------------------------*/
 #define DELAY 			100  			// Base Period
 #define DELAY_MAX 		(DELAY*100)
 #define PERIOD_500 		(DELAY*5)
@@ -39,10 +39,9 @@ typedef struct {
 #define PERIOD_0   		(DELAY*0)
 #define SEQUENCY 		6
 
-/* Exported functions ------------------------------------------------------- */
+/* Exported functions -------------------------------------------------------*/
 void delayInit(delay_t *delay, tick_t duration);
 bool_t delayRead(delay_t *delay);
 void delayWrite(delay_t *delay, tick_t duration);
-
 
 #endif /* API_DELAY */

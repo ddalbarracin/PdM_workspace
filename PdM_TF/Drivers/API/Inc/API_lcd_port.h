@@ -70,6 +70,9 @@
 #define LCD_PORT_DATOS 					1
 #define LCD_PORT_CONTROL 				0
 
+#define LCD_PORT_CURSOR_START			0
+#define LCD_PORT_CURSOR_END			15
+
 
 /* Prototype Functions -------------------------------------------------------- */
 _Bool lcdPORT_Init(void);

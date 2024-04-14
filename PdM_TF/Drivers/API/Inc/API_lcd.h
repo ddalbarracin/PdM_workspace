@@ -30,6 +30,18 @@
 #define LCD_OPT2				"TEMP ="
 #define LCD_OPT3				"PRE ="
 
+#define LCD_TEXT_LENGTH			16
+#define LCD_CURSOR_POS			LCD_TEXT_LENGTH
+#define LCD_LINE_HIGH			LCD_PORT_DDRAM_LH
+#define LCD_LINE_LOW			LCD_PORT_DDRAM_LL
+#define LCD_CURSOR_POS_START	0
+#define LCD_CURSOR_MSR_ALT		4
+#define LCD_CURSOR_MSR_TEMP		5
+#define LCD_CURSOR_MSR_PRES		5
+#define LCD_CURSOR_UNIT_ALT		12
+#define LCD_CURSOR_UNIT_TEMP	12
+#define LCD_CURSOR_UNIT_PRES	10
+
 
 
 /* Prototypes Functions ------------------------------------------------------ */

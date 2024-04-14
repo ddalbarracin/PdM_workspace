@@ -7,11 +7,11 @@
  *
  ******************************************************************************
  **/
-/* Includes guard ------------------------------------------------------------- */
+/* Includes guard -----------------------------------------------------------*/
 #ifndef API_RTC
 #define API_RTC
 
-/* Includes ------------------------------------------------------------------ */
+/* Includes -----------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -20,7 +20,7 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_nucleo_144.h"
 
-/* Private defines ------------------------------------------------------------*/
+/* Private defines ----------------------------------------------------------*/
 /* Definition for RTC clock resources */
 #define RTC_HW								RTC
 #define RTC_HOUR_FRMT						RTC_HOURFORMAT_24
@@ -52,24 +52,23 @@
 #define RTC_SET_DATE_DATE					0x19
 #define RTC_SET_DATE_YEAR					0x12
 
-/* TypeDef ------------------------------------------------------------------ */
-typedef struct{
+/* TypeDef ------------------------------------------------------------------*/
+typedef struct {
 	uint8_t hour;
 	uint8_t minute;
 	uint8_t second;
-}time_t;
+} time_t;
 
 typedef struct {
 	uint8_t date;
 	uint8_t month;
 	uint8_t year;
-}date_t;
+} date_t;
 
-/* Functions ------------------------------------------------------------------ */
+/* Functions ----------------------------------------------------------------*/
 _Bool rtcInit(void);
 _Bool rtcDeInit(void);
 time_t rtcGetTime(void);
 date_t rtcGetDate(void);
-
 
 #endif /* API_RTC */

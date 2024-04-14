@@ -7,24 +7,24 @@
  *
  ******************************************************************************
  **/
-/* Includes ------------------------------------------------------------------ */
+/* Includes -----------------------------------------------------------------*/
 #include "API_cli.h"
 #include "API_cli_port.h"
 
-/* Functions ------------------------------------------------------------------*/
+/* Functions ----------------------------------------------------------------*/
 /*
  * @func   cliInit
  * @brief
  * @param  None
  * @retval _Bool
  */
-_Bool cliInit(void){
+_Bool cliInit(void) {
 
 	_Bool stts = false;
 
 	stts = cliPORT_Init();
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -34,13 +34,13 @@ _Bool cliInit(void){
  * @param  None
  * @retval _Bool
  */
-_Bool cliDeInit(void){
+_Bool cliDeInit(void) {
 
 	_Bool stts = false;
 
 	stts = cliPORT_DeInit();
 
-	return(stts);
+	return (stts);
 
 }
 
@@ -50,11 +50,11 @@ _Bool cliDeInit(void){
  * @param  None
  * @retval _Bool
  */
-_Bool cliClear(void){
+void cliClear(void) {
 
-	_Bool stts = false;
+	cliPORT_Clear();
 
-	return(stts);
+	return;
 
 }
 
@@ -64,7 +64,7 @@ _Bool cliClear(void){
  * @param  uint8_t*, uint8_t*, uint8_t*
  * @retval None
  */
-void cliPrint(uint8_t *msg1, uint8_t *msg2, uint8_t *msg3){
+void cliPrint(uint8_t *msg1, uint8_t *msg2, uint8_t *msg3) {
 
 	uint8_t message[60];
 	uint8_t concat = 0;
@@ -73,41 +73,40 @@ void cliPrint(uint8_t *msg1, uint8_t *msg2, uint8_t *msg3){
 
 	memset(message, '\0', sizeof(message));
 
-	if (( msg1 != NULL )&&( msg2 != NULL )&&( msg3 != NULL )){
+	if ((msg1 != NULL) && (msg2 != NULL) && (msg3 != NULL)) {
 
-		length =  strlen((const char *) msg1);
-		for(indx = 0; indx < length; indx ++){
+		length = strlen((const char*) msg1);
+		for (indx = 0; indx < length; indx++) {
 			message[indx] = msg1[indx];
 		}
 		concat = indx;
-		length =  strlen((const char *) msg2);
-		for(indx = concat; indx < (length + concat); indx ++){
+		length = strlen((const char*) msg2);
+		for (indx = concat; indx < (length + concat); indx++) {
 			message[indx] = msg2[indx - concat];
 		}
 		concat = indx;
-		length =  strlen((const char *) msg3);
-		for(indx = concat; indx < (length + concat); indx ++){
+		length = strlen((const char*) msg3);
+		for (indx = concat; indx < (length + concat); indx++) {
 			message[indx] = msg3[indx - concat];
 		}
-	}
-	else{
-		if(( msg1 != NULL )&&( msg2 != NULL )){
+	} else {
+		if ((msg1 != NULL) && (msg2 != NULL)) {
 
-			length =  strlen((const char *) msg1);
-			for(indx = 0; indx < length; indx ++){
+			length = strlen((const char*) msg1);
+			for (indx = 0; indx < length; indx++) {
 				message[indx] = msg1[indx];
 			}
 			concat = indx;
-			length =  strlen((const char *) msg2);
-			for(indx = concat; indx < (length + concat); indx ++){
+			length = strlen((const char*) msg2);
+			for (indx = concat; indx < (length + concat); indx++) {
 				message[indx] = msg2[indx - concat];
 			}
 			concat = indx;
-		}else{
-			if (msg1 != NULL){
-			length =  strlen((const char *) msg2);
-			for(indx = 0; indx < strlen((const char *) msg1); indx ++){
-				message[indx] = msg1[indx];
+		} else {
+			if (msg1 != NULL) {
+				length = strlen((const char*) msg2);
+				for (indx = 0; indx < strlen((const char*) msg1); indx++) {
+					message[indx] = msg1[indx];
 				}
 			}
 		}

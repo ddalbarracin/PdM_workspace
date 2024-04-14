@@ -31,7 +31,7 @@ static uint8_t spiReadWrite(uint8_t);
  * @param  None
  * @retval _Bool
  */
-_Bool spiInit(void){
+_Bool spiInit(void) {
 
 	HAL_StatusTypeDef spi_stts;
 	_Bool stts = false;
@@ -53,19 +53,18 @@ _Bool spiInit(void){
 
 	spi_stts = HAL_SPI_Init(&spiHandler);
 
-	if(spi_stts == HAL_OK){
+	if (spi_stts == HAL_OK) {
 
 		stts = true;
 		spiCSGPIOInit();
 
-	}
-	else{
+	} else {
 
 		spiError_Handler(spi_stts);
 
 	}
 
-	return(stts);
+	return (stts);
 }
 
 /**
@@ -74,7 +73,7 @@ _Bool spiInit(void){
  * @param  None
  * @retval None
  */
-void spiDeInit(void){
+void spiDeInit(void) {
 
 	spiMspDeInit();
 	spiCSGPIODeInit();
@@ -88,7 +87,7 @@ void spiDeInit(void){
  * @param  uint8_t
  * @retval uint8_t
  */
-uint8_t spiREGRead(uint8_t addr){
+uint8_t spiREGRead(uint8_t addr) {
 
 	uint8_t spiValue;
 
@@ -99,7 +98,7 @@ uint8_t spiREGRead(uint8_t addr){
 
 	spiCSHigh();
 
-	return(spiValue);
+	return (spiValue);
 
 }
 
@@ -109,7 +108,7 @@ uint8_t spiREGRead(uint8_t addr){
  * @param  uint8_t, uint8_t
  * @retval None
  */
-void spiREGWrite(uint8_t addr, uint8_t value){
+void spiREGWrite(uint8_t addr, uint8_t value) {
 
 	uint8_t spiAddr;
 
@@ -130,14 +129,14 @@ void spiREGWrite(uint8_t addr, uint8_t value){
  * @param  uint8_t, uint8_t*, uint8_t
  * @retval None
  */
-void spiBULKRead(uint8_t addr, uint8_t *bulk, uint8_t length){
+void spiBULKRead(uint8_t addr, uint8_t *bulk, uint8_t length) {
 
 	spiCSLow();
 
 	spiReadWrite(addr);
-	while(--length){
+	while (--length) {
 
-		*bulk ++=spiReadWrite(0);
+		*bulk++ = spiReadWrite(0);
 
 	}
 
@@ -153,20 +152,21 @@ void spiBULKRead(uint8_t addr, uint8_t *bulk, uint8_t length){
  * @param  uint8_t
  * @retval uint8_t
  */
-static uint8_t spiReadWrite(uint8_t spiTxDato){
+static uint8_t spiReadWrite(uint8_t spiTxDato) {
 
 	HAL_StatusTypeDef spi_stts;
 	uint8_t spiRxDato;
 
-	spi_stts = HAL_SPI_TransmitReceive(&spiHandler, &spiTxDato, &spiRxDato, ONLY_BYTE, HAL_MAX_DELAY);
+	spi_stts = HAL_SPI_TransmitReceive(&spiHandler, &spiTxDato, &spiRxDato,
+			ONLY_BYTE, HAL_MAX_DELAY);
 
-	if(spi_stts != HAL_OK){
+	if (spi_stts != HAL_OK) {
 
 		spiError_Handler(spi_stts);
 
 	}
 
-	return(spiRxDato);
+	return (spiRxDato);
 }
 
 /**
@@ -175,14 +175,14 @@ static uint8_t spiReadWrite(uint8_t spiTxDato){
  * @param  SPI_HandleTypeDef*
  * @retval None
  */
-static void spiMspInit(SPI_HandleTypeDef *hspi){
+static void spiMspInit(SPI_HandleTypeDef *hspi) {
 
 	GPIO_InitTypeDef GPIO_InitStruct;
 
 	/* Enable clock for GPIOA Port */
 	SPI1_GPIO_CLK_ENABLE();
 
-		/* Configure GPIO parameters */
+	/* Configure GPIO parameters */
 	GPIO_InitStruct.Pin = SPI1_SCLK_PIN | SPI1_MOSI_PIN | SPI1_MISO_PIN;
 	GPIO_InitStruct.Mode = SPI1_GPIO_MODE;
 	GPIO_InitStruct.Speed = SPI1_GPIO_SPEED;
@@ -205,7 +205,7 @@ static void spiMspInit(SPI_HandleTypeDef *hspi){
  * @param  None
  * @retval None
  */
-static void spiMspDeInit(void){
+static void spiMspDeInit(void) {
 
 	/* Disable clock for GPIO Port B*/
 	SPI1_GPIO_CLK_ENABLE();
@@ -223,7 +223,7 @@ static void spiMspDeInit(void){
  * @param  None
  * @retval None
  */
-static void spiCSGPIOInit(void){
+static void spiCSGPIOInit(void) {
 
 	/* Enable the CS PIN Clock */
 	SPI1_CS_GPIO_CLK_ENABLE();
@@ -245,7 +245,7 @@ static void spiCSGPIOInit(void){
  * @param  None
  * @retval None
  */
-static void spiCSGPIODeInit(void){
+static void spiCSGPIODeInit(void) {
 
 	SPI1_CS_GPIO_CLK_DISABLE();
 
@@ -257,7 +257,7 @@ static void spiCSGPIODeInit(void){
  * @param  None
  * @retval None
  */
-static void spiCSLow(void){
+static void spiCSLow(void) {
 
 	HAL_GPIO_WritePin(SPI1_CS_PORT, spiCSHandler.Pin, GPIO_PIN_RESET);
 
@@ -271,7 +271,7 @@ static void spiCSLow(void){
  * @param  None
  * @retval None
  */
-static void spiCSHigh(void){
+static void spiCSHigh(void) {
 
 	HAL_GPIO_WritePin(SPI1_CS_PORT, spiCSHandler.Pin, GPIO_PIN_SET);
 
@@ -285,8 +285,8 @@ static void spiCSHigh(void){
  * @param  HAL_StatusTypeDef
  * @retval None
  */
-static void spiError_Handler(HAL_StatusTypeDef){
-	while(1){
+static void spiError_Handler(HAL_StatusTypeDef) {
+	while (1) {
 
 	}
 }
