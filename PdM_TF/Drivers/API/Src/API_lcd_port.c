@@ -94,9 +94,9 @@ static void lcdPrint_FirstWrite(void) {
 
 	lcdPORT_Ctrl_Cmnd(LCD_PORT_CLEAR);
 	lcdPORT_Ctrl_Cmnd(LCD_PORT_CLEAR);
-	lcdPORT_Print((uint8_t*) lcd_blank, LCD_PORT_DDRAM_LH, 3);
+	lcdPORT_Print((uint8_t*) lcd_blank, LCD_PORT_DDRAM_LH, LCD_PORT_CURSOR_ST);
 	HAL_Delay(1);
-	lcdPORT_Print((uint8_t*) lcd_blank, LCD_PORT_DDRAM_LL, 3);
+	lcdPORT_Print((uint8_t*) lcd_blank, LCD_PORT_DDRAM_LL, LCD_PORT_CURSOR_ST);
 	HAL_Delay(1);
 	lcdPORT_Ctrl_Cmnd(LCD_PORT_CLEAR);
 

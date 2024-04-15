@@ -164,6 +164,20 @@ time_t rtcGetTime(void) {
 	RTC_DateTypeDef rtcDate;
 	RTC_TimeTypeDef rtcTime;
 
+	/* From RM0090 Manual.
+	 * The RTC calendar time and date registers are accessed
+	 * through shadow registers which are synchronized with
+	 * PCLK1 (APB1 clock).
+	 * The shadow registers are updated after up to 2 RTCCLK
+	 * periods.
+	 * To ensure consistency between the 3 values, reading
+	 * either RTC_SSR or RTC_TR locks the values in the
+	 * higher-order calendar shadow registers until RTC_DR is
+	 * read.
+	 *
+	 * So that means it's necesary to read both Resgister
+	 * to get a consistency calendar value.
+	 */
 	rtc_stts = HAL_RTC_GetTime(&rtcHandler, &rtcTime, RTC_FORMAT_BCD);
 	rtc_stts = HAL_RTC_GetDate(&rtcHandler, &rtcDate, RTC_FORMAT_BCD);
 
@@ -229,6 +243,20 @@ date_t rtcGetDate(void) {
 	RTC_DateTypeDef rtcDate;
 	RTC_TimeTypeDef rtcTime;
 
+	/* From RM0090 Manual.
+	 * The RTC calendar time and date registers are accessed
+	 * through shadow registers which are synchronized with
+	 * PCLK1 (APB1 clock).
+	 * The shadow registers are updated after up to 2 RTCCLK
+	 * periods.
+	 * To ensure consistency between the 3 values, reading
+	 * either RTC_SSR or RTC_TR locks the values in the
+	 * higher-order calendar shadow registers until RTC_DR is
+	 * read.
+	 *
+	 * So that means it's necesary to read both Resgister
+	 * to get a consistency calendar value.
+	 */
 	rtc_stts = HAL_RTC_GetTime(&rtcHandler, &rtcTime, RTC_FORMAT_BCD);
 	rtc_stts = HAL_RTC_GetDate(&rtcHandler, &rtcDate, RTC_FORMAT_BCD);
 

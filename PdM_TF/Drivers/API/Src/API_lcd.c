@@ -506,8 +506,8 @@ static void lcdPrint_Opt3(uint8_t *pmsr) {
 
 /*
  * @func   lcdData2Ascii
- * @brief  Print Opt3
- * @param  char *
+ * @brief  Convert float to ascii
+ * @param  float, uint8_t*
  * @retval None
  */
 static void lcdData2Ascii(float msr, uint8_t *svalue) {

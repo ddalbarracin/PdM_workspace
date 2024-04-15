@@ -39,7 +39,7 @@
 |						|				| GPIOA		  |			  | PA4		  | CS		   |
 | LCD1602				| I2C			| I2C1		  |	7		  | PB8		  |	SCL		   |
 |						|				|			  |			  | PB9		  |	SDA		   |	
-| CLI					| USART			| USART3	  | ST-Link	  | PB10	  |	Tx		   |
+| CLI					| UART			| USART3	  | ST-Link	  | PB10	  |	Tx		   |
 |						|				|			  |			  | PB11	  |	Rx		   |
 | Buttons				| -				| GPIOF		  |	7		  | PF12	  | UP 		   |
 |						|				|			  |	10		  | PF13	  |	DOWN	   |
@@ -48,8 +48,8 @@
 
 ## Especificaciones para Conexion de Salida Estandar
 
-| DEVICE              | Parameter     | PHERIPHERAL 				 | 
-| :-------------------| :-----------: | :--------------------------: | 
+| DEVICE              | Parameter     | Value 				 | 
+| :-------------------| :------------ | :--------------------------- | 
 | UART				  | BaudRate	  | 9600						 |
 |					  | Mode		  | TxRx	    				 |
 |					  | WordLength    | 8		    				 |

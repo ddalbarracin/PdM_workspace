@@ -16,14 +16,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 /* LCD Registers ---------------------------------------------------------------
-#define INST_REG
-#define DATA_REG
-#define ADD_COUNT
-#define DDRAM
-#define CGRAM
-*/
+ #define INST_REG
+ #define DATA_REG
+ #define ADD_COUNT
+ #define DDRAM
+ #define CGRAM
+ */
 /* LCD Commands ----------------------------------------------------------------*/
 #define LCD_PORT_CLEAR	 				(1<<0)
 #define LCD_PORT_RETURN_HOME			(1<<1)
@@ -53,7 +52,6 @@
 #define LCD_PORT_WRTIE_DATA				(1<<9)
 #define LCD_PORT_READ_DATA				(2<<9)
 
-
 #define LCD_PORT_DELAY50 				50
 #define LCD_PORT_DELAY10 				10
 #define LCD_PORT_DELAY5					5
@@ -71,13 +69,13 @@
 #define LCD_PORT_CONTROL 				0
 
 #define LCD_PORT_CURSOR_START			0
-#define LCD_PORT_CURSOR_END			15
-
+#define LCD_PORT_CURSOR_END				15
+#define LCD_PORT_CURSOR_ST				3
 
 /* Prototype Functions -------------------------------------------------------- */
 _Bool lcdPORT_Init(void);
 void lcdPORT_DeInit(void);
 void lcdPORT_Clear(void);
-void lcdPORT_Print(uint8_t *, uint8_t, uint8_t);
+void lcdPORT_Print(uint8_t*, uint8_t, uint8_t);
 
 #endif /* API_LCD_PORT */
