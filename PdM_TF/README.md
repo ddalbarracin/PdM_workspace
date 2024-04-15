@@ -31,7 +31,7 @@
 
 ## Tabla de Interconexiones
 
-| Device                | PROTOCOL      | PHERIPHERAL | CONNECTOR | PIN       | FUNCTION   |
+| Device                | Protocol      | Peripheral  | Connector | PIN       | Function   |
 | :---------------------| :-----------: | :---------: | :-------: | :-------: | :--------: |
 | BMP280				| SPI		    | SPI1		  |	7		  | PB3		  | SCK		   |
 |						|				|			  |			  | PB5		  |	MOSI	   |
@@ -41,14 +41,14 @@
 |						|				|			  |			  | PB9		  |	SDA		   |	
 | CLI					| UART			| USART3	  | ST-Link	  | PB10	  |	Tx		   |
 |						|				|			  |			  | PB11	  |	Rx		   |
-| Buttons				| -				| GPIOF		  |	7		  | PF12	  | UP 		   |
+| Buttons				| IO			| GPIOF		  |	7		  | PF12	  | UP 		   |
 |						|				|			  |	10		  | PF13	  |	DOWN	   |
 |						|				| GPIOG		  |	9		  | PG0		  |	ENTER	   |
 |						|				|			  |	9		  | PG1		  |	BACK	   |  
 
-## Especificaciones para Conexion de Salida Estandar
+## Especificaciones para Conexion de Salida Estandar y Conficguracion de Clock de Tiempo Real
 
-| DEVICE              | Parameter     | Value 				 | 
+| Device              | Parameter     | Value 				 		 | 
 | :-------------------| :------------ | :--------------------------- | 
 | UART				  | BaudRate	  | 9600						 |
 |					  | Mode		  | TxRx	    				 |
