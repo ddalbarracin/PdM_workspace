@@ -33,7 +33,7 @@ static uint8_t spiReadWrite(uint8_t);
  */
 _Bool spiInit(void) {
 
-	HAL_StatusTypeDef spi_stts;
+	HAL_StatusTypeDef spi_stts = HAL_ERROR;
 	_Bool stts = false;
 
 	spiHandler.Instance = SPI1_INST;
@@ -89,7 +89,7 @@ void spiDeInit(void) {
  */
 uint8_t spiREGRead(uint8_t addr) {
 
-	uint8_t spiValue;
+	uint8_t spiValue = 0;
 
 	spiCSLow();
 
@@ -110,7 +110,7 @@ uint8_t spiREGRead(uint8_t addr) {
  */
 void spiREGWrite(uint8_t addr, uint8_t value) {
 
-	uint8_t spiAddr;
+	uint8_t spiAddr = 0;
 
 	spiAddr = addr & SPI_WRITE_MASK;
 	spiCSLow();
@@ -154,8 +154,8 @@ void spiBULKRead(uint8_t addr, uint8_t *bulk, uint8_t length) {
  */
 static uint8_t spiReadWrite(uint8_t spiTxDato) {
 
-	HAL_StatusTypeDef spi_stts;
-	uint8_t spiRxDato;
+	HAL_StatusTypeDef spi_stts = HAL_ERROR;
+	uint8_t spiRxDato = 0;
 
 	spi_stts = HAL_SPI_TransmitReceive(&spiHandler, &spiTxDato, &spiRxDato,
 			ONLY_BYTE, HAL_MAX_DELAY);

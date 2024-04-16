@@ -79,7 +79,7 @@ int main(void) {
  *            HCLK(Hz)                       = 180000000
  *            AHB Prescaler                  = 1
  *            APB1 Prescaler                 = 4
- *            APB2 Prescaler                 = 2
+ *            APB2 Prescaler                 = 4
  *            HSE Frequency(Hz)              = 8000000
  *            PLL_M                          = 8
  *            PLL_N                          = 360

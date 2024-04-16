@@ -120,11 +120,14 @@ float bmpPORT_Get_Temp(void) {
 	int32_t msrdTemp;
 	uint8_t tempBuf[BMP_REG_TEMP_QTY];
 
+	memset(tempBuf, '\0', BMP_REG_TEMP_QTY);
+
 	spiBULKRead(BMP_REG_TEMP_MSB, tempBuf, BMP_REG_TEMP_QTY);
 
 	msrdTemp = ((tempBuf[0] << 12) | (tempBuf[1] << 4) | (tempBuf[2] >> 4));
 
-	measr.temp = (float) (bmp280_compensate_T_int32(msrdTemp) / 100.0);
+	measr.temp = (float) ((bmp280_compensate_T_int32(msrdTemp) / 100.0)
+			- BMP_SHIFT_LCL_TEMP);
 
 	return (measr.temp);
 
@@ -140,11 +143,13 @@ float bmpPORT_Get_Press(void) {
 	int32_t msrdPress;
 	uint8_t pressBuf[BMP_REG_PRESS_QTY];
 
+	memset(pressBuf, '\0', BMP_REG_PRESS_QTY);
 	spiBULKRead(BMP_REG_PRESS_MSB, pressBuf, BMP_REG_PRESS_QTY);
 
 	msrdPress = ((pressBuf[0] << 12) | (pressBuf[1] << 4) | (pressBuf[2] >> 4));
 
-	measr.press = (float) (bmp280_compensate_P_int64(msrdPress) / 256.0);
+	measr.press = (float) ((bmp280_compensate_P_int64(msrdPress) / 256.0)
+			+ BMP_SHIFT_LCL_PRESS);
 
 	return (measr.press);
 
@@ -350,6 +355,7 @@ static void bmpPORT_Set_Reset(void) {
 static void bmpPORT_Get_CompParam(void) {
 
 	uint8_t cmpBuffer[BMP_REG_CAL_LENGTH];
+	memset(cmpBuffer, '\0', BMP_REG_CAL_LENGTH);
 
 	spiBULKRead(BMP_REG_CAL_INIT, cmpBuffer, BMP_REG_CAL_LENGTH);
 
@@ -444,8 +450,7 @@ static uint32_t bmp280_compensate_P_int64(int32_t msrdPress) {
 	var2 = var2 + (((int64_t) compParams.dig_P4) << 35);
 	var1 = ((var1 * var1 * (int64_t) compParams.dig_P3) >> 8)
 			+ ((var1 * (int64_t) compParams.dig_P2) << 12);
-	var1 = (((((int64_t) 1) << 47) + var1)) * ((int64_t) compParams.dig_P1)
-			>> 33;
+	var1 = ((INT64_C(0x800000000000) + var1) * ((int64_t) compParams.dig_P1)) >> 33;
 	if (var1 == 0) {
 		return 0; // avoid exception caused by division by zero
 	}

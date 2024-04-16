@@ -32,12 +32,12 @@ static const char lcd_alt[] = "Altitud";
 static const char lcd_temp[] = "Temperatura";
 static const char lcd_pres[] = "Presion";
 static const char lcd_opt1[] = "ALT: ";
-static const char lcd_opt1_unit[] = " [m]";
+static const char lcd_opt1_unit[] = "[m]";
 static const char lcd_opt2[] = "TEMP: ";
 static const char lcd_opt2_unit[] = { '[', 0xDF, 'C', ']' };
-static const char uart_opt2_unit[] = " [॰C]";
+static const char uart_opt2_unit[] = "[॰C]";
 static const char lcd_opt3[] = "PRES: ";
-static const char lcd_opt3_unit[] = " [hPa]";
+static const char lcd_opt3_unit[] = "[hPa]";
 static const char uart_Error_Start[] = "Error: ";
 static const char uart_Error_Message[] = "LCD Bad Formed Text. ";
 static const char uart_Error_End[] = "Please Try Again.";
@@ -519,7 +519,7 @@ static void lcdData2Ascii(float msr, uint8_t *svalue) {
 	char digit4[5];
 	char digit3[4];
 	char digit2[3];
-	char fracc[2];
+	char fracc[3];
 
 	/* float convert to integer */
 
