@@ -54,8 +54,6 @@ int main(void) {
 	/* Initilize System FSM */
 	lcdFSM_SysInit();
 
-	/* Initilize Button Debounce FSM */
-	debounceFSM_init();
 
 	/* Infinite loop */
 	while (1) {

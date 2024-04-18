@@ -113,6 +113,8 @@ void lcdFSM_SysInit(void){
 		LCDState = LCD_STATE_MENU1;
 		cliPrint((uint8_t*) uart_start, NULL, NULL);
 		lcdPrint_Menu1();
+		/* Initilize Button Debounce FSM */
+		debounceFSM_init();
 
 	} else {
 
